@@ -12,6 +12,9 @@
 class RosterAPI
 {
 
+    protected $apiUrl = 'http://chesapeakespokesclub.org/cso_roster/public/api';
+    //protected $apiUrl = 'https://cso_roster.test';
+
     public static function register()
     {
         $instance = new self;
@@ -80,7 +83,7 @@ class RosterAPI
     {
         $data = (is_null($data)) ? ['email' => '', 'zip' => ''] : $data;
 
-        $url = 'https://cso_roster.test/api/user/' . $data['email'] . '/' . $data['zip'];
+        $url = $this->apiUrl . '/user/' . $data['email'] . '/' . $data['zip'];
         $response = $this->makeApiCall('GET', $url);
         $member = json_decode($response['body']);
 
@@ -92,7 +95,7 @@ class RosterAPI
         $data = $_POST['data'];
         parse_str($data, $parsed);
 
-        $url = 'https://cso_roster.test/api/member/post';
+        $url = $this->apiUrl . '/member/post';
         $response = $this->makeApiCall('POST', $url, $parsed);
         $success = json_decode($response['body']);
 
@@ -113,7 +116,10 @@ class RosterAPI
         $password = 'your-password';
         $headers = array( 'Authorization' => 'Basic ' . base64_encode( "$username:$password" ) );
         if ($action == 'GET') {
-            $response = wp_remote_get( $url, [ 'headers' => $headers, 'sslverify' => false ] );
+            $response = wp_remote_get( $url, [
+                'headers' => $headers,
+                'sslverify' => false
+            ] );
         }
         if ($action == 'POST') {
             $response = wp_remote_post( $url, [
