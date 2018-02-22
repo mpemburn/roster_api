@@ -64,9 +64,7 @@ class RosterAPI
         $prefixes = ['Mr.', 'Mrs.', 'Ms.', 'Hon.', 'Dr.'];
         $suffixes = ['Jr.', 'Sr.', 'II', 'III', 'MD', 'DDS', 'PA', 'JD', 'OD'];
         $states = ['DC', 'DE', 'MD', 'NJ', 'NY', 'PA', 'VA'];
-        $user = $this->getMemberDataOrFail();
-
-        $user->member_since_date = date('F j, Y', strtotime($user->member_since_date));
+        $member = $this->getMemberDataOrFail();
 
         ob_start();
         include 'member_form.php';
@@ -87,6 +85,9 @@ class RosterAPI
         $response = $this->makeApiCall('GET', $url);
         $member = json_decode($response['body']);
 
+        if (!empty($member)) {
+            $member->member_since_date = date('F j, Y', strtotime($member->member_since_date));
+        }
         return $member;
     }
 
