@@ -51,11 +51,12 @@ class RosterAPI
      */
     public function enqueueAssets()
     {
+        $version = '1.03';
         wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
-        wp_enqueue_style('roster_api', plugin_dir_url(__FILE__) . 'css/roster_api.css', '', '1.0');
+        wp_enqueue_style('roster_api', plugin_dir_url(__FILE__) . 'css/roster_api.css', '', $version);
 
-        wp_enqueue_script('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js');        wp_register_script('dom-observer', plugin_dir_url(__FILE__) . 'js/dom_observer.js', '', '1.0', true);
-        wp_register_script('roster_api', plugin_dir_url(__FILE__) . 'js/roster_api.js', '', '1.0', true);
+        wp_enqueue_script('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js');
+        wp_register_script('roster_api', plugin_dir_url(__FILE__) . 'js/roster_api.js', '', $version, true);
         wp_enqueue_script('roster_api');
 
     }

@@ -17,7 +17,13 @@ RosterApi = {
                 if (response.success) {
                     if (response.action == 'fetch') {
                         var data = response.data;
-                        self._populateForm('#member_update', data);
+                        if (data.length !== 0) {
+                            jQuery('#rapi_form').show();
+                            jQuery('#rapi_renew').hide();
+                            self._populateForm('#member_update', data);
+                        }
+                    }
+                    if (response.action == 'save') {
                     }
                 } else {
                     console.log(response);
@@ -35,6 +41,14 @@ RosterApi = {
     },
     _setListeners: function() {
         var self = this;
+
+        jQuery('[name="type_choice"').on('click', function() {
+            var $this = jQuery(this);
+            var isNew = ($this.val() == '0');
+
+            jQuery('#rapi_form').toggle(isNew);
+            jQuery('#rapi_renew').toggle(!isNew);
+        });
 
         jQuery('#existing_member').on('click', function(evt) {
             evt.preventDefault();
