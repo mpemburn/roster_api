@@ -8,19 +8,21 @@ RosterApi = {
         jQuery.ajax({
             type : "post",
             dataType : "json",
-            url : '/wordpress/wp-admin/admin-ajax.php',
+            url : ajax_params.ajax_url,
             data : {
                 action: action,
                 data: formData,
             },
             success: function(response) {
-                if (response.success) {
+                if (response.action) {
                     if (response.action == 'fetch') {
                         var data = response.data;
-                        if (data.length !== 0) {
+                        if (data !== null) {
                             jQuery('#rapi_form').show();
                             jQuery('#rapi_renew').hide();
                             self._populateForm('#member_update', data);
+                        } else {
+                            jQuery('#member_fetch_error').show();
                         }
                     }
                     if (response.action == 'save') {

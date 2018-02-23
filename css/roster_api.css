@@ -2,3 +2,7 @@
 #rapi_form {
     display: none;
 }
+
+#member_fetch_error {
+    display: none;
+}

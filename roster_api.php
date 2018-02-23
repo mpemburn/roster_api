@@ -23,6 +23,8 @@ class RosterAPI
         // Set up AJAX handlers
         add_action('wp_ajax_roster_api_fetch', [$instance, 'fetchMemberFromRoster']);
         add_action('wp_ajax_roster_api_update', [$instance, 'updateMember']);
+        add_action('wp_ajax_nopriv_roster_api_fetch', [$instance, 'fetchMemberFromRoster']);
+        add_action('wp_ajax_nopriv_roster_api_update', [$instance, 'updateMember']);
     }
 
     private function __construct()
@@ -51,7 +53,7 @@ class RosterAPI
      */
     public function enqueueAssets()
     {
-        $version = '1.03';
+        $version = '1.02';
         wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
         wp_enqueue_style('roster_api', plugin_dir_url(__FILE__) . 'css/roster_api.css', '', $version);
 
@@ -59,13 +61,15 @@ class RosterAPI
         wp_register_script('roster_api', plugin_dir_url(__FILE__) . 'js/roster_api.js', '', $version, true);
         wp_enqueue_script('roster_api');
 
+        wp_register_script('ajax-js', null);
+        wp_localize_script('ajax-js', 'ajax_params', array('ajax_url' => admin_url('admin-ajax.php')));
+        wp_enqueue_script('ajax-js');
     }
 
     public function memberFormHandler( $att, $content ) {
         $prefixes = ['Mr.', 'Mrs.', 'Ms.', 'Hon.', 'Dr.'];
         $suffixes = ['Jr.', 'Sr.', 'II', 'III', 'MD', 'DDS', 'PA', 'JD', 'OD'];
         $states = ['DC', 'DE', 'MD', 'NJ', 'NY', 'PA', 'VA'];
-        $member = $this->getMemberDataOrFail();
 
         ob_start();
         include 'member_form.php';
@@ -80,16 +84,15 @@ class RosterAPI
 
     public function getMemberDataOrFail($data = null)
     {
-        $data = (is_null($data)) ? ['email' => '', 'zip' => ''] : $data;
+        if (!is_null($data)) {
+            $url = $this->apiUrl . '/user/' . $data['email'] . '/' . $data['zip'];
+            $response = $this->makeApiCall('GET', $url);
+            $member = json_decode($response['body']);
 
-        $url = $this->apiUrl . '/user/' . $data['email'] . '/' . $data['zip'];
-        $response = $this->makeApiCall('GET', $url);
-        $member = json_decode($response['body']);
-
-        if (!empty($member)) {
-            $member->member_since_date = date('F j, Y', strtotime($member->member_since_date));
+            return $member;
         }
-        return $member;
+
+        return null;
     }
 
     public function updateMember()

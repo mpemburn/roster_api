@@ -10,36 +10,33 @@
 <div id="rapi_renew">
     <form method="POST" accept-charset="UTF-8" id="member_fetch">
         <div class="form-group">
-            <label for="email" class="col-md-3 control-label">Email</label>
-            <div class="col-md-11">
-                <div class="col-md-10 field-wrapper">
-                    <input class="col-md-12 required" placeholder="Email *" name="email" type="email"
-                           value="mark@pemburn.com">
+            <div class="col-md-12 row">
+                <div class="col-md-8">
+                    <label for="email" class="col-md-12 control-label">Email</label>
+                    <input class="col-md-12 required" placeholder="Email *" name="email" type="email" value="">
+                </div>
+                <div class="col-md-3">
+                    <label for="zip" class="col-md-12 control-label">Zip</label>
+                    <input class="col-md-12 required" placeholder="Zip *" name="zip" type="text" value="">
                 </div>
             </div>
-            <label for="email" class="col-md-3 control-label">Zip</label>
-            <div class="col-md-11">
-                <div class="col-md-2 field-wrapper">
-                    <input class="col-md-12 required" placeholder="Zip *" name="zip" type="text"
-                           value="<?php echo $user->zip; ?>">
-                </div>
-            </div>
-            <div class="col-md-12">
+            <div id="member_fetch_button" class="col-md-11">
                 <div class="col-md-12 field-wrapper text-right">
                     <button class="button" id="existing_member" name="existing_member">Submit</button>
                 </div>
+            </div>
+            <div class="error-message" id="member_fetch_error" class="col-md-11">
+                We were unable to find a member with that email address and zip code in our database.
+                You may have used a different email address to sign up originally.
+                Please contact our <a href="contact">Club Secretary</a>
             </div>
         </div>
     </form>
 </div>  <!-- rapi_renew -->
 <div id="rapi_form">
     <form method="POST" accept-charset="UTF-8" id="member_update">
-        <input name="id" type="hidden" value="<?php echo $user->id; ?>">
-        <input name="active" type="hidden" value="<?php echo $user->id; ?>">
-        <div class="panel-heading">
-            <h4><?php echo $user->first_name . ' ' . $user->last_name; ?></h4>
-            <div>Member since: <?php echo $user->member_since_date; ?></div>
-        </div>
+        <input name="id" type="hidden" value="">
+        <input name="active" type="hidden" value="">
         <div class="panel-body row">
             <main class="main-column col-md-12" style="border: 1px solid gray;">
                 <div class="form-group">
@@ -58,15 +55,15 @@
                         </div>
                         <div class="col-md-3 field-wrapper">
                             <input class="col-md-12 required" placeholder="First Name *" name="first_name" type="text"
-                                   value="<?php echo $user->first_name; ?>">
+                                   value="">
                         </div>
                         <div class="col-md-2 field-wrapper">
                             <input class="col-md-12" placeholder="Middle" name="middle_name" type="text"
-                                   value="<?php echo $user->middle_name; ?>">
+                                   value="">
                         </div>
                         <div class="col-md-3 field-wrapper">
                             <input class="col-md-12 required" placeholder="Last Name *" name="last_name" type="text"
-                                   value="<?php echo $user->last_name; ?>">
+                                   value="">
                         </div>
                         <div class="col-md-2 field-wrapper">
                             <select class="col-md-12 field-wrapper" name="suffix">
@@ -86,19 +83,19 @@
                     <div class="col-md-12">
                         <div class="col-md-10 field-wrapper">
                             <input class="col-md-12 required" placeholder="Address 1 *" name="address_1" type="text"
-                                   value="<?php echo $user->address_1; ?>">
+                                   value="">
                         </div>
                     </div>
                     <div class="col-md-12 col-md-offset-1">
                         <div class="col-md-10 field-wrapper">
                             <input class="col-md-12" placeholder="Address 2" name="address_2" type="text"
-                                   value="<?php echo $user->address_2; ?>">
+                                   value="">
                         </div>
                     </div>
                     <div class="col-md-12 col-md-offset-1 row">
                         <div class="col-md-4 field-wrapper">
                             <input class="col-md-12 required" placeholder="City *" name="city" type="text"
-                                   value="<?php echo $user->city; ?>">
+                                   value="">
                         </div>
                         <div class="col-md-2 field-wrapper">
                             <select class="col-md-12 required" name="state">
@@ -113,7 +110,7 @@
                         </div>
                         <div class="col-md-2 field-wrapper">
                             <input class="col-md-12 required" placeholder="Zip *" name="zip" type="text"
-                                   value="<?php echo $user->zip; ?>">
+                                   value="">
                         </div>
                     </div>
                 </div>
@@ -132,14 +129,14 @@
                     </div>
                     <div class="col-md-3 field-wrapper">
                         <input class="col-md-12" placeholder="Cell Phone" name="cell_phone" type="text"
-                               value="<?php echo $user->cell_phone; ?>">
+                               value="">
                     </div>
                     <div class="col-md-3">
                         Home phone
                     </div>
                     <div class="col-md-3 field-wrapper">
                         <input class="col-md-12" placeholder="Home Phone" name="home_phone" type="text"
-                               value="<?php echo $user->home_phone; ?>">
+                               value="">
                     </div>
                 </div>
                 <div class="form-group">
