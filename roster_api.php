@@ -58,6 +58,7 @@ class RosterAPI
         wp_enqueue_style('roster_api', plugin_dir_url(__FILE__) . 'css/roster_api.css', '', $version);
 
         wp_enqueue_script('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js');
+        wp_enqueue_script('paypal', 'https://www.paypalobjects.com/api/checkout.js');
         wp_register_script('roster_api', plugin_dir_url(__FILE__) . 'js/roster_api.js', '', $version, true);
         wp_enqueue_script('roster_api');
 
@@ -102,12 +103,13 @@ class RosterAPI
 
         $url = $this->apiUrl . '/member/post';
         $response = $this->makeApiCall('POST', $url, $parsed);
-        $success = json_decode($response['body']);
+        $responseBody = json_decode($response['body']);
+        $success = (!empty($responseBody) && (!property_exists($responseBody, 'errors')));
 
         wp_send_json([
-            'success' => !empty($response['body']),
+            'success' => $success,
             'action' => 'update',
-            'data' => $response['body']
+            'data' => $responseBody
         ]);
 
         die();

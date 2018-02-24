@@ -25,7 +25,8 @@ RosterApi = {
                             jQuery('#member_fetch_error').show();
                         }
                     }
-                    if (response.action == 'save') {
+                    if (response.action == 'update') {
+                        self._handleUpdateResponse(response);
                     }
                 } else {
                     console.log(response);
@@ -35,6 +36,14 @@ RosterApi = {
                 console.log(response);
             }
         });
+    },
+    _handleUpdateResponse: function(response) {
+        if (response.success) {
+        } else {
+            if (response.data.errors !== undefined) {
+                this._showErrors(response.data.errors);
+            }
+        }
     },
     _populateForm: function(formId, data) {
         jQuery.each(data, function(key, value){
@@ -61,6 +70,15 @@ RosterApi = {
             evt.preventDefault();
             self._doAjax('roster_api_update', 'member_update');
         });
+    },
+    _showErrors: function(errors) {
+        jQuery('.form-error').remove();
+        for (var key in errors) {
+            if (errors.hasOwnProperty(key)) {
+                var $field = jQuery('[name="' + key + '"]');
+                $field.after('<div class="form-error">' + errors[key] + '</div>');
+            }
+        }
     }
 };
 

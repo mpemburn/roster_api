@@ -6,3 +6,10 @@
 #member_fetch_error {
     display: none;
 }
+
+.form-error {
+    font-size: 10px;
+    display: block;
+    min-height: 10px;
+    color: #ff0000;
+}
