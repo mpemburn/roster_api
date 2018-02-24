@@ -13,3 +13,7 @@
     min-height: 10px;
     color: #ff0000;
 }
+
+input.disable {
+    border: none;
+}

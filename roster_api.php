@@ -33,11 +33,14 @@ class RosterAPI
 
     public function fetchMemberFromRoster()
     {
-        $data = $_POST['data'];
+        $post = $_POST['data'];
 
-        parse_str($data, $parsed);
+        // Parse query string into array
+        parse_str($post, $data);
+        $data['email'] = $data['member_email'];
+        $data['zip'] = $data['member_zip'];
 
-        $response = $this->getMemberDataOrFail($parsed);
+        $response = $this->getMemberDataOrFail($data);
 
         wp_send_json([
             'success' => !empty($response),

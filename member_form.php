@@ -13,11 +13,11 @@
             <div class="col-md-12 row">
                 <div class="col-md-8">
                     <label for="email" class="col-md-12 control-label">Email</label>
-                    <input class="col-md-12 required" placeholder="Email *" name="email" type="email" value="">
+                    <input class="col-md-12 required" placeholder="Email *" name="member_email" type="email" value="">
                 </div>
                 <div class="col-md-3">
                     <label for="zip" class="col-md-12 control-label">Zip</label>
-                    <input class="col-md-12 required" placeholder="Zip *" name="zip" type="text" value="">
+                    <input class="col-md-12 required" placeholder="Zip *" name="member_zip" type="text" value="">
                 </div>
             </div>
             <div id="member_fetch_button" class="col-md-11">
