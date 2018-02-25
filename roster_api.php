@@ -12,8 +12,8 @@
 class RosterAPI
 {
 
-    protected $apiUrl = 'http://chesapeakespokesclub.org/cso_roster/public/api';
-    //protected $apiUrl = 'https://cso_roster.test';
+    //protected $apiUrl = 'http://chesapeakespokesclub.org/cso_roster/public/api';
+    protected $apiUrl = 'https://cso_roster.test/api';
 
     public static function register()
     {

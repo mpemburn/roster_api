@@ -120,11 +120,16 @@
                     <div class="col-md-3 field-wrapper">
                         <input class="col-md-12" placeholder="Cell Phone" name="cell_phone" type="text" value="">
                     </div>
-                    <div class="col-md-3">
-                        Home phone
+                </div>
+                <div class="form-group">
+                    <label for="address" class="col-md-3 control-label">Emergency Contact</label>
+                    <div class="col-md-9">
+                        <div class="col-md-10 field-wrapper">
+                            <input class="col-md-12 required" placeholder="Contact Name *" name="contact_name" type="text" value="">
+                        </div>
                     </div>
                     <div class="col-md-3 field-wrapper">
-                        <input class="col-md-12" placeholder="Home Phone" name="home_phone" type="text" value="">
+                        <input class="col-md-12 required" placeholder="Contact Phone *" name="contact_phone" type="text" value="">
                     </div>
                 </div>
                 <div class="form-group">
