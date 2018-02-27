@@ -25,11 +25,7 @@
                     <button class="button" id="existing_member" name="existing_member">Submit</button>
                 </div>
             </div>
-            <div class="error-message" id="member_fetch_error" class="col-md-11">
-                We were unable to find a member with that email address and zip code in our database.
-                You may have used a different email address to sign up originally.
-                Please contact our <a href="contact">Club Secretary</a>
-            </div>
+            <div class="fetch-message" id="member_fetch_message" class="col-md-11"></div>
         </div>
     </form>
 </div>  <!-- rapi_renew -->

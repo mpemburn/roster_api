@@ -31,21 +31,8 @@ RosterApi = {
         });
     },
     _handleFetchResponse: function(response) {
-        var data = response.data;
-
         jQuery('.form-error').remove();
-        if (data !== null) {
-            // Show the form and hide the 'renewing' fields
-            jQuery('[name="email"]')
-                .prop('disabled', true)
-                .addClass('disable');
-
-            jQuery('#rapi_form').show();
-            jQuery('#rapi_renew').hide();
-            this._populateForm('#member_update', data);
-        } else {
-            jQuery('#member_fetch_error').show();
-        }
+        jQuery('#member_fetch_message').html(response.data).show();
     },
     _handleUpdateResponse: function(response) {
         if (response.success) {
@@ -54,11 +41,6 @@ RosterApi = {
                 this._showErrors(response.data.errors);
             }
         }
-    },
-    _populateForm: function(formId, data) {
-        jQuery.each(data, function(key, value){
-            jQuery('[name=' + key + ']', formId).val(value);
-        });
     },
     _setListeners: function() {
         var self = this;

@@ -43,9 +43,9 @@ class RosterAPI
         $response = $this->getMemberDataOrFail($data);
 
         wp_send_json([
-            'success' => !empty($response),
+            'success' => $response->success,
             'action' => 'fetch',
-            'data' => $response
+            'data' => $this->getFetchMessage($response->success)
         ]);
 
         die();
@@ -116,6 +116,19 @@ class RosterAPI
         ]);
 
         die();
+    }
+
+    protected function getFetchMessage($success)
+    {
+        if ($success) {
+            $message = 'Thanks! Please continue your renewal process by clicking the PayPal button.';
+        } else {
+            $message = 'Sorry! We were unable to find a member with that email address and zip code in our database.
+                You may have used a different email address to sign up originally.
+                Please contact our <a href="/contact">Club Secretary</a>';
+        }
+
+        return $message;
     }
 
     protected function makeApiCall($action, $url, $data = [])
