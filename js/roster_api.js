@@ -8,7 +8,7 @@ RosterApi = {
         jQuery.ajax({
             type : "post",
             dataType : "json",
-            url : ajax_params.ajax_url,
+            url : jsNamespace.ajaxUrl,
             data : {
                 action: action,
                 data: formData,
@@ -51,6 +51,12 @@ RosterApi = {
 
             jQuery('#rapi_form').toggle(isNew);
             jQuery('#rapi_renew').toggle(!isNew);
+        });
+
+        jQuery('[id^="amount_"').on('click', function() {
+            jQuery('[id^="amount_"').each(function() {
+                var $this = jQuery(this);
+            });
         });
 
         jQuery('#existing_member').on('click', function(evt) {

@@ -1,5 +1,7 @@
 <?php
 
+include 'settings.php';
+
 /*
  * @wordpress-plugin
  * Plugin Name: RosterAPI Plugin
@@ -13,11 +15,19 @@ class RosterAPI
 {
 
     protected $apiUrl = 'http://chesapeakespokesclub.org/cso_roster/public/api';
-    //protected $apiUrl = 'https://cso_roster.test/api';
+    protected $paypalSandboxKey;
+    protected $paypalProductionKey;
+    protected $paypalAmounts;
+    protected $duesAmount;
 
     public static function register()
     {
         $instance = new self;
+        if (is_admin()) {
+            new \AdminSettings();
+        } else {
+            $instance->loadSettings();
+        }
         $instance->enqueueAssets();
         add_action( 'init', array( $instance, 'registerShortcodes' ) );
         // Set up AJAX handlers
@@ -64,9 +74,16 @@ class RosterAPI
         wp_enqueue_script('paypal', 'https://www.paypalobjects.com/api/checkout.js');
         wp_register_script('roster_api', plugin_dir_url(__FILE__) . 'js/roster_api.js', '', $version, true);
         wp_enqueue_script('roster_api');
+        wp_register_script('paypal_button', plugin_dir_url(__FILE__) . 'js/paypal_button.js', '', $version, true);
+        wp_enqueue_script('paypal_button');
 
         wp_register_script('ajax-js', null);
-        wp_localize_script('ajax-js', 'ajax_params', array('ajax_url' => admin_url('admin-ajax.php')));
+        wp_localize_script('ajax-js', 'jsNamespace', [
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'paypalSandboxKey' => $this->paypalSandboxKey,
+            'paypalProductionKey' => $this->paypalProductionKey,
+            'paypalAmount' => $this->duesAmount
+        ]);
         wp_enqueue_script('ajax-js');
     }
 
@@ -74,6 +91,7 @@ class RosterAPI
         $prefixes = ['Mr.', 'Mrs.', 'Ms.', 'Hon.', 'Dr.'];
         $suffixes = ['Jr.', 'Sr.', 'II', 'III', 'MD', 'DDS', 'PA', 'JD', 'OD'];
         $states = ['DC', 'DE', 'MD', 'NJ', 'NY', 'PA', 'VA'];
+        $payments = $this->getPaypalAmounts();
 
         ob_start();
         include 'member_form.php';
@@ -129,6 +147,43 @@ class RosterAPI
         }
 
         return $message;
+    }
+
+    protected function getPaypalAmounts()
+    {
+        $amounts = [];
+
+        if (!is_null($this->paypalAmounts)) {
+            $lines = explode(PHP_EOL, $this->paypalAmounts);
+            foreach ($lines as $line) {
+                $lineParts = explode(':', $line);
+                $label = trim($lineParts[0]);
+                $amount = trim($lineParts[1]);
+                if (stristr($label, 'dues') !== false) {
+                    $this->duesAmount = $amount
+                }
+
+                $amounts[$label] = $amount;
+            }
+        }
+
+        return $amounts;
+    }
+
+    protected function loadSettings()
+    {
+        $option = get_option('roster_option_name');
+
+        $settings = (!empty($option)) ? (object) $option : null;
+
+        if (!is_null($settings)) {
+            $this->apiUrl = $settings->api_uri;
+            $this->paypalSandboxKey = $settings->paypal_sandbox;
+            $this->paypalProductionKey = $settings->paypal_production;
+            $this->paypalAmounts = $settings->paypal_amounts;
+
+        }
+
     }
 
     protected function makeApiCall($action, $url, $data = [])
