@@ -25,7 +25,7 @@
                     <button class="button" id="existing_member" name="existing_member">Submit</button>
                 </div>
             </div>
-            <div class="fetch-message" id="member_fetch_message" class="col-md-11"></div>
+            <div class="col-md-12" id="member_fetch_message"></div>
         </div>
     </form>
 </div>  <!-- rapi_renew -->
@@ -35,97 +35,99 @@
         <input name="active" type="hidden" value="">
         <div class="panel-body row">
             <main class="main-column col-md-12" style="border: 1px solid gray;">
-                <div class="form-group">
-                    <label for="name" class="col-md-3 control-label">Name</label>
-                    <div class="col-md-12 row">
-                        <div class="col-md-2 field-wrapper">
-                            <select class="col-md-12" name="prefix">
-                                <option value="">Select</option>
-                                <?php foreach ($prefixes as $prefix) :
-                                    $selected = ($prefix == $user->prefix) ? 'selected' : '';
-                                    ?>
-                                    <option value="<?php echo $prefix; ?>" <?php echo $selected; ?>><?php echo $prefix; ?></option>
-                                <?php endforeach; ?>
-                            </select>
+                <div id="member_fields">
+                    <div class="form-group">
+                        <label for="name" class="col-md-3 control-label">Name</label>
+                        <div class="col-md-12 row">
+                            <div class="col-md-2 field-wrapper">
+                                <select class="col-md-12" name="prefix">
+                                    <option value="">Select</option>
+                                    <?php foreach ($prefixes as $prefix) :
+                                        $selected = ($prefix == $user->prefix) ? 'selected' : '';
+                                        ?>
+                                        <option value="<?php echo $prefix; ?>" <?php echo $selected; ?>><?php echo $prefix; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-3 field-wrapper">
+                                <input class="col-md-12 required" placeholder="First Name *" name="first_name" type="text" value="">
+                            </div>
+                            <div class="col-md-2 field-wrapper">
+                                <input class="col-md-12" placeholder="Middle" name="middle_name" type="text" value="">
+                            </div>
+                            <div class="col-md-3 field-wrapper">
+                                <input class="col-md-12 required" placeholder="Last Name *" name="last_name" type="text" value="">
+                            </div>
+                            <div class="col-md-2 field-wrapper">
+                                <select class="col-md-12 field-wrapper" name="suffix">
+                                    <option value="">Select</option>
+                                    <?php foreach ($suffixes as $suffix) :
+                                        $selected = ($suffix == $user->suffix) ? 'selected' : '';
+                                        ?>
+                                        <option
+                                            value="<?php echo $suffix; ?>" <?php echo $selected; ?>><?php echo $suffix; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="address" class="col-md-3 control-label">Address</label>
+                        <div class="col-md-12">
+                            <div class="col-md-10 field-wrapper">
+                                <input class="col-md-12 required" placeholder="Address 1 *" name="address_1" type="text" value="">
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-md-offset-1">
+                            <div class="col-md-10 field-wrapper">
+                                <input class="col-md-12" placeholder="Address 2" name="address_2" type="text" value="">
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-md-offset-1 row">
+                            <div class="col-md-4 field-wrapper">
+                                <input class="col-md-12 required" placeholder="City *" name="city" type="text" value="">
+                            </div>
+                            <div class="col-md-2 field-wrapper">
+                                <select class="col-md-12 required" name="state">
+                                    <option value="">Select</option>
+                                    <?php foreach ($states as $state) :
+                                        $selected = ($state == $user->state) ? 'selected' : '';
+                                        ?>
+                                        <option value="<?php echo $state; ?>" <?php echo $selected; ?>><?php echo $state; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-2 field-wrapper">
+                                <input class="col-md-12 required" placeholder="Zip *" name="zip" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="col-md-3 control-label">Email</label>
+                        <div class="col-md-12">
+                            <div class="col-md-10 field-wrapper">
+                                <input class="col-md-12 required" placeholder="Email *" name="email" type="email" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            Cell phone
                         </div>
                         <div class="col-md-3 field-wrapper">
-                            <input class="col-md-12 required" placeholder="First Name *" name="first_name" type="text" value="">
+                            <input class="col-md-12" placeholder="Cell Phone" name="cell_phone" type="text" value="">
                         </div>
-                        <div class="col-md-2 field-wrapper">
-                            <input class="col-md-12" placeholder="Middle" name="middle_name" type="text" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="address" class="col-md-3 control-label">Emergency Contact</label>
+                        <div class="col-md-9">
+                            <div class="col-md-10 field-wrapper">
+                                <input class="col-md-12 required" placeholder="Contact Name *" name="contact_name" type="text" value="">
+                            </div>
                         </div>
                         <div class="col-md-3 field-wrapper">
-                            <input class="col-md-12 required" placeholder="Last Name *" name="last_name" type="text" value="">
+                            <input class="col-md-12 required" placeholder="Contact Phone *" name="contact_phone" type="text" value="">
                         </div>
-                        <div class="col-md-2 field-wrapper">
-                            <select class="col-md-12 field-wrapper" name="suffix">
-                                <option value="">Select</option>
-                                <?php foreach ($suffixes as $suffix) :
-                                    $selected = ($suffix == $user->suffix) ? 'selected' : '';
-                                    ?>
-                                    <option
-                                        value="<?php echo $suffix; ?>" <?php echo $selected; ?>><?php echo $suffix; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="address" class="col-md-3 control-label">Address</label>
-                    <div class="col-md-12">
-                        <div class="col-md-10 field-wrapper">
-                            <input class="col-md-12 required" placeholder="Address 1 *" name="address_1" type="text" value="">
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-md-offset-1">
-                        <div class="col-md-10 field-wrapper">
-                            <input class="col-md-12" placeholder="Address 2" name="address_2" type="text" value="">
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-md-offset-1 row">
-                        <div class="col-md-4 field-wrapper">
-                            <input class="col-md-12 required" placeholder="City *" name="city" type="text" value="">
-                        </div>
-                        <div class="col-md-2 field-wrapper">
-                            <select class="col-md-12 required" name="state">
-                                <option value="">Select</option>
-                                <?php foreach ($states as $state) :
-                                    $selected = ($state == $user->state) ? 'selected' : '';
-                                    ?>
-                                    <option value="<?php echo $state; ?>" <?php echo $selected; ?>><?php echo $state; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="col-md-2 field-wrapper">
-                            <input class="col-md-12 required" placeholder="Zip *" name="zip" type="text" value="">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="email" class="col-md-3 control-label">Email</label>
-                    <div class="col-md-12">
-                        <div class="col-md-10 field-wrapper">
-                            <input class="col-md-12 required" placeholder="Email *" name="email" type="email" value="">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        Cell phone
-                    </div>
-                    <div class="col-md-3 field-wrapper">
-                        <input class="col-md-12" placeholder="Cell Phone" name="cell_phone" type="text" value="">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="address" class="col-md-3 control-label">Emergency Contact</label>
-                    <div class="col-md-9">
-                        <div class="col-md-10 field-wrapper">
-                            <input class="col-md-12 required" placeholder="Contact Name *" name="contact_name" type="text" value="">
-                        </div>
-                    </div>
-                    <div class="col-md-3 field-wrapper">
-                        <input class="col-md-12 required" placeholder="Contact Phone *" name="contact_phone" type="text" value="">
                     </div>
                 </div>
                 <div id="paypal" class="form-group">
@@ -139,6 +141,14 @@
                             </div>
                         </div>
                         <div class="col-md-12 field-wrapper row">
+                            <div class="col-md-8">
+                                &nbsp;
+                            </div>
+                            <div class="col-md-4">
+                                Dues: $<?php echo $dues; ?>
+                            </div>
+                        </div>
+                        <div class="col-md-12 field-wrapper row">
                             <?php
                                 $count = 1;
                                 foreach ( $payments as $label => $amount) : ?>
@@ -147,8 +157,7 @@
                             </div>
                                 <div class="col-md-4">
                                     <label for="amount_<?php echo $count; ?>">
-                                    <?php $checked = (stristr($label, 'dues') !== false) ? 'checked disabled' : ''; ?>
-                                    <input type="checkbox" id="amount_<?php echo $count; ?>" value="<?php echo $amount; ?>" <?php echo $checked; ?>>
+                                     <input type="checkbox" id="amount_<?php echo $count; ?>" value="<?php echo $amount; ?>">
                                     <?php echo $label; ?>: $<?php echo $amount; ?></label>
                                 </div>
                             <?php
@@ -157,7 +166,10 @@
                         </div>
                         <div class="col-md-12 field-wrapper row">
                             <div class="col-md-8">
-                                &nbsp;
+                                Please read the <a id="waiver_link" href="">WAIVER OF LIABILITY</a>
+                                <label for="waiver" class="waiver">
+                                    <input type="checkbox" id="waiver" name="waiver" disabled>I have read and agree to the liability waiver.
+                                </label>
                             </div>
                             <div class="col-md-4">
                                 <div id="paypal-button-container"></div>
@@ -170,3 +182,6 @@
         </div>
     </form>
 </div> <!-- rapi_form -->
+<div id="waiver_modal">
+   <?php echo $legal; ?>
+</div>

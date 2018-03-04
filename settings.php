@@ -96,8 +96,16 @@ class AdminSettings
         );
 
         add_settings_field(
+            'dues_amount',
+            'Dues Amount',
+            array( $this, 'duesAmountCallback' ),
+            'roster-api-setting-admin',
+            'setting_section_id'
+        );
+
+        add_settings_field(
             'paypal_amounts',
-            'PayPal Amounts',
+            'Additional Charges',
             array( $this, 'paypalAmountsCallback' ),
             'roster-api-setting-admin',
             'setting_section_id'
@@ -122,6 +130,10 @@ class AdminSettings
 
         if (isset($input['paypal_production'])) {
             $new_input['paypal_production'] = sanitize_text_field($input['paypal_production']);
+        }
+
+        if (isset($input['dues_amount'])) {
+            $new_input['dues_amount'] = $input['dues_amount'];
         }
 
         if (isset($input['paypal_amounts'])) {
@@ -169,6 +181,17 @@ class AdminSettings
         printf(
             '<input type="text" style="width: 25rem;" id="paypal_production" name="roster_option_name[paypal_production]" value="%s" />',
             isset( $this->options['paypal_production'] ) ? esc_attr( $this->options['paypal_production']) : ''
+        );
+    }
+
+    /**
+     * Get the settings option array and print one of its values
+     */
+    public function duesAmountCallback()
+    {
+        printf(
+            '<input type="text" style="width: 5rem;" id="dues_amount" name="roster_option_name[dues_amount]" value="%s" />',
+            isset( $this->options['dues_amount'] ) ? esc_attr( $this->options['dues_amount']) : ''
         );
     }
 

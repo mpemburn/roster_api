@@ -1,6 +1,10 @@
 RosterApi = {
+    waiverRead: false,
     init: function() {
         this._setListeners();
+    },
+    paypalSuccess: function() {
+        self._doAjax('roster_api_update', 'member_update');
     },
     _doAjax: function(action, formId) {
         var self = this;
@@ -33,6 +37,8 @@ RosterApi = {
     _handleFetchResponse: function(response) {
         jQuery('.form-error').remove();
         jQuery('#member_fetch_message').html(response.data).show();
+        jQuery('#rapi_form').show();
+        jQuery('#member_fields, #existing_member, #rapi_choice').hide();
     },
     _handleUpdateResponse: function(response) {
         if (response.success) {
@@ -49,6 +55,7 @@ RosterApi = {
             var $this = jQuery(this);
             var isNew = ($this.val() == '0');
 
+            jQuery('#rapi_choice').hide();
             jQuery('#rapi_form').toggle(isNew);
             jQuery('#rapi_renew').toggle(!isNew);
         });
@@ -59,15 +66,17 @@ RosterApi = {
             });
         });
 
+        jQuery('#waiver_link').on('click', function(evt) {
+            evt.preventDefault();
+            this.waiverRead = true;
+            self._showWaiver();
+        });
+
         jQuery('#existing_member').on('click', function(evt) {
             evt.preventDefault();
             self._doAjax('roster_api_fetch', 'member_fetch');
         });
 
-        jQuery('#save_member').on('click', function(evt) {
-            evt.preventDefault();
-            self._doAjax('roster_api_update', 'member_update');
-        });
     },
     _showErrors: function(errors) {
         jQuery('.form-error').remove();
@@ -77,10 +86,13 @@ RosterApi = {
                 $field.after('<div class="form-error">' + errors[key] + '</div>');
             }
         }
+    },
+    _showWaiver: function() {
+        jQuery('#waiver_modal').dialog();
     }
 };
 
 jQuery('.imgedit-menu').ready(function ($) {
-    var rosterApi = Object.create(RosterApi);
-    rosterApi.init();
+    jsNamespace.rosterApi = Object.create(RosterApi);
+    jsNamespace.rosterApi.init();
 });

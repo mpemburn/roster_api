@@ -7,6 +7,10 @@
     display: none;
 }
 
+label.waiver {
+    color: gray;
+}
+
 .form-error {
     font-size: 10px;
     display: block;
@@ -17,3 +21,4 @@
 input.disable {
     border: none;
 }
+

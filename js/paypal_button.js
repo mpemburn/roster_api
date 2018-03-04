@@ -19,7 +19,7 @@ paypal.Button.render({
             payment: {
                 transactions: [
                     {
-                        amount: { total: jsNamespace.paypalAmount, currency: 'USD' }
+                        amount: { total: jsNamespace.duesAmount, currency: 'USD' }
                     }
                 ]
             }
@@ -31,7 +31,7 @@ paypal.Button.render({
 
         // Make a call to the REST api to execute the payment
         return actions.payment.execute().then(function() {
-            window.alert('Payment Complete!');
+            jsNamespace.rosterApi.paypalSuccess();
         });
     },
     onCancel: function(data, actions) {

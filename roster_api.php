@@ -14,11 +14,13 @@ include 'settings.php';
 class RosterAPI
 {
 
-    protected $apiUrl = 'http://chesapeakespokesclub.org/cso_roster/public/api';
+    protected $apiUrl;
     protected $paypalSandboxKey;
     protected $paypalProductionKey;
     protected $paypalAmounts;
     protected $duesAmount;
+    protected $devMode = true;
+    protected $devApiUrl = 'https://cso_roster.test/api/';
 
     public static function register()
     {
@@ -66,11 +68,15 @@ class RosterAPI
      */
     public function enqueueAssets()
     {
-        $version = '1.02';
+        $version = '1.00';
+        wp_enqueue_style( 'wp-jquery-ui-dialog' );
+        wp_enqueue_style( 'jquery-ui'. 'http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css' );
         wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
         wp_enqueue_style('roster_api', plugin_dir_url(__FILE__) . 'css/roster_api.css', '', $version);
 
         wp_enqueue_script('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js');
+        wp_enqueue_script('jquery-ui-core');
+        wp_enqueue_script( 'jquery-ui-dialog' );
         wp_enqueue_script('paypal', 'https://www.paypalobjects.com/api/checkout.js');
         wp_register_script('roster_api', plugin_dir_url(__FILE__) . 'js/roster_api.js', '', $version, true);
         wp_enqueue_script('roster_api');
@@ -82,7 +88,7 @@ class RosterAPI
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'paypalSandboxKey' => $this->paypalSandboxKey,
             'paypalProductionKey' => $this->paypalProductionKey,
-            'paypalAmount' => $this->duesAmount
+            'duesAmount' => $this->duesAmount
         ]);
         wp_enqueue_script('ajax-js');
     }
@@ -91,7 +97,9 @@ class RosterAPI
         $prefixes = ['Mr.', 'Mrs.', 'Ms.', 'Hon.', 'Dr.'];
         $suffixes = ['Jr.', 'Sr.', 'II', 'III', 'MD', 'DDS', 'PA', 'JD', 'OD'];
         $states = ['DC', 'DE', 'MD', 'NJ', 'NY', 'PA', 'VA'];
+        $dues = $this->duesAmount;
         $payments = $this->getPaypalAmounts();
+        $legal = $this->getLegalContent();
 
         ob_start();
         include 'member_form.php';
@@ -160,7 +168,7 @@ class RosterAPI
                 $label = trim($lineParts[0]);
                 $amount = trim($lineParts[1]);
                 if (stristr($label, 'dues') !== false) {
-                    $this->duesAmount = $amount
+                    $this->duesAmount = $amount;
                 }
 
                 $amounts[$label] = $amount;
@@ -170,6 +178,16 @@ class RosterAPI
         return $amounts;
     }
 
+    protected function getLegalContent()
+    {
+        $content_post = get_post(11);
+        $content = $content_post->post_content;
+        $content = apply_filters('the_content', $content);
+        $content = str_replace(']]>', ']]&gt;', $content);
+
+        return $content;
+    }
+
     protected function loadSettings()
     {
         $option = get_option('roster_option_name');
@@ -177,9 +195,10 @@ class RosterAPI
         $settings = (!empty($option)) ? (object) $option : null;
 
         if (!is_null($settings)) {
-            $this->apiUrl = $settings->api_uri;
+            $this->apiUrl = (!$this->devMode) ? $settings->api_uri : $this->devApiUrl;
             $this->paypalSandboxKey = $settings->paypal_sandbox;
             $this->paypalProductionKey = $settings->paypal_production;
+            $this->duesAmount = $settings->dues_amount;
             $this->paypalAmounts = $settings->paypal_amounts;
 
         }
