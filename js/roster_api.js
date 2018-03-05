@@ -48,6 +48,33 @@ RosterApi = {
             }
         }
     },
+    _setupDialog: function() {
+        jQuery('#crop_modal').dialog({
+            dialogClass: 'wp-dialog',
+            autoOpen: false,
+            draggable: true,
+            width: 'auto',
+            modal: true,
+            resizable: false,
+            closeOnEscape: true,
+            position: {
+                my: "center",
+                at: "center",
+                of: window
+            },
+            close: function() {
+            },
+            create: function () {
+                // Style fix for WordPress admin
+                $('.ui-dialog-titlebar-close').addClass('ui-button');
+            },
+            buttons: {
+                'Close': function() {
+                    $(this).dialog('close');
+                }
+            }
+        })
+    },
     _setListeners: function() {
         var self = this;
 
