@@ -1,6 +1,7 @@
 RosterApi = {
     waiverRead: false,
     init: function() {
+        //sthis._setupDialog();
         this._setListeners();
     },
     paypalSuccess: function() {
@@ -19,10 +20,10 @@ RosterApi = {
             },
             success: function(response) {
                 if (response.action) {
-                    if (response.action == 'fetch') {
+                    if (response.action === 'fetch') {
                         self._handleFetchResponse(response);
                     }
-                    if (response.action == 'update') {
+                    if (response.action === 'update') {
                         self._handleUpdateResponse(response);
                     }
                 } else {
@@ -48,8 +49,8 @@ RosterApi = {
             }
         }
     },
-    _setupDialog: function() {
-        jQuery('#crop_modal').dialog({
+    _setupDialog: function () {
+        jQuery('#waiver_modal').dialog({
             dialogClass: 'wp-dialog',
             autoOpen: false,
             draggable: true,
@@ -62,33 +63,33 @@ RosterApi = {
                 at: "center",
                 of: window
             },
-            close: function() {
+            close: function () {
             },
             create: function () {
                 // Style fix for WordPress admin
-                $('.ui-dialog-titlebar-close').addClass('ui-button');
+                jQuery('.ui-dialog-titlebar-close').addClass('ui-button');
             },
             buttons: {
-                'Close': function() {
-                    $(this).dialog('close');
+                'Close': function () {
+                    jQuery(this).dialog('close');
                 }
             }
-        })
+        });
     },
-    _setListeners: function() {
+    _setListeners: function () {
         var self = this;
 
-        jQuery('[name="type_choice"').on('click', function() {
+        jQuery('[name="type_choice"]').on('click', function() {
             var $this = jQuery(this);
-            var isNew = ($this.val() == '0');
+            var isNew = ($this.val() === '0');
 
             jQuery('#rapi_choice').hide();
             jQuery('#rapi_form').toggle(isNew);
             jQuery('#rapi_renew').toggle(!isNew);
         });
 
-        jQuery('[id^="amount_"').on('click', function() {
-            jQuery('[id^="amount_"').each(function() {
+        jQuery('[id^="amount_"]').on('click', function() {
+            jQuery('[id^="amount_"]').each(function() {
                 var $this = jQuery(this);
             });
         });

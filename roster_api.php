@@ -68,7 +68,7 @@ class RosterAPI
      */
     public function enqueueAssets()
     {
-        $version = '1.00';
+        $version = '1.004';
         wp_enqueue_style( 'wp-jquery-ui-dialog' );
         wp_enqueue_style( 'jquery-ui'. 'http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css' );
         wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
@@ -180,7 +180,7 @@ class RosterAPI
 
     protected function getLegalContent()
     {
-        $content_post = get_post(11);
+        $content_post = get_post(8);
         $content = $content_post->post_content;
         $content = apply_filters('the_content', $content);
         $content = str_replace(']]>', ']]&gt;', $content);

@@ -7,6 +7,10 @@
     display: none;
 }
 
+#waiver_modal {
+    display: none;
+}
+
 label.waiver {
     color: gray;
 }
