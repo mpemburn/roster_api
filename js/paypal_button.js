@@ -13,17 +13,9 @@ paypal.Button.render({
 
     // payment() is called when the button is clicked
     payment: function(data, actions) {
-
+        var payment = jsNamespace.rosterApi.getPaymentInfo();
         // Make a call to the REST api to create the payment
-        return actions.payment.create({
-            payment: {
-                transactions: [
-                    {
-                        amount: { total: jsNamespace.duesAmount, currency: 'USD' }
-                    }
-                ]
-            }
-        });
+        return actions.payment.create(payment);
     },
 
     // onAuthorize() is called when the buyer approves the payment

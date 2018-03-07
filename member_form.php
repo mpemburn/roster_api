@@ -157,7 +157,7 @@
                             </div>
                                 <div class="col-md-4">
                                     <label for="amount_<?php echo $count; ?>">
-                                     <input type="checkbox" id="amount_<?php echo $count; ?>" value="<?php echo $amount; ?>">
+                                     <input type="checkbox" id="amount_<?php echo $count; ?>" data-label="<?php echo $label; ?>" value="<?php echo $amount; ?>">
                                     <?php echo $label; ?>: $<?php echo $amount; ?></label>
                                 </div>
                             <?php
@@ -183,5 +183,7 @@
     </form>
 </div> <!-- rapi_form -->
 <div id="waiver_modal">
-   <?php echo $legal; ?>
+    <div id="#modal_content" style="font-size: 10pt !important">
+        <?php echo $legal; ?>
+    </div>
 </div>

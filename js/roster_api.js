@@ -1,11 +1,37 @@
 RosterApi = {
     waiverRead: false,
+    duesAmount: jsNamespace.duesAmount,
+    extraItemsTotal: 0,
+    paypalItemList: [],
     init: function() {
-        //sthis._setupDialog();
+        this._setupDialog();
         this._setListeners();
+        jQuery('#rapi_form').show();
     },
     paypalSuccess: function() {
         self._doAjax('roster_api_update', 'member_update');
+    },
+    getPaymentInfo: function() {
+        var payment = {
+            payment: {
+                intent: "sale",
+                payer: {
+                    payment_method: "paypal"
+                }
+            },
+        };
+        payment['transactions'] = [{
+            amount: {
+                total: this._getTotal(),
+                currency: "USD"
+            },
+            item_list: this._getItemList()
+        }];
+
+//        if (this.extraItemsTotal > 0) {
+//            payment['transactions']['item_list'] = this._getItemList();
+//        }
+        return payment;
     },
     _doAjax: function(action, formId) {
         var self = this;
@@ -35,6 +61,12 @@ RosterApi = {
             }
         });
     },
+    _getItemList: function() {
+        return this.paypalItemList;
+    },
+    _getTotal: function() {
+        return parseFloat(this.duesAmount) + parseFloat(this.extraItemsTotal);
+    },
     _handleFetchResponse: function(response) {
         jQuery('.form-error').remove();
         jQuery('#member_fetch_message').html(response.data).show();
@@ -49,12 +81,49 @@ RosterApi = {
             }
         }
     },
+    _writeItemList: function() {
+        var self = this;
+        var items =[];
+        var itemList = [];
+
+        this.paypalItemList = [];
+        this.extraItemsTotal = 0;
+
+        itemList['Dues'] = parseFloat(this.duesAmount);
+
+        jQuery('[id^="amount_"]').each(function() {
+            var $this = jQuery(this);
+            var amount = $this.val();
+            var label = $this.attr('data-label')
+            if ($this.prop('checked')) {
+                itemList[label] = parseFloat(amount);
+                self.extraItemsTotal += amount;
+            }
+        });
+
+        for (var label in itemList) {
+            if (itemList.hasOwnProperty(label)) {
+                var item = {
+                    name: label,
+                    description: label,
+                    quantity: "1",
+                    price: itemList[label],
+                    sku: "",
+                    currency: "USD"
+                }
+                items.push(item);
+            }
+        }
+        this.paypalItemList['items'] = items;
+    },
     _setupDialog: function () {
+        var self = this;
+
         jQuery('#waiver_modal').dialog({
             dialogClass: 'wp-dialog',
             autoOpen: false,
             draggable: true,
-            width: 'auto',
+            width: '50%',
             modal: true,
             resizable: false,
             closeOnEscape: true,
@@ -63,7 +132,13 @@ RosterApi = {
                 at: "center",
                 of: window
             },
+            open: function(evt, ui) {
+                jQuery(this).css('height', '300px');
+            },
             close: function () {
+                jQuery('label.waiver').css('color', 'black');
+                jQuery('#waiver').prop('disabled', false);
+                self.waiverRead = true;
             },
             create: function () {
                 // Style fix for WordPress admin
@@ -89,15 +164,16 @@ RosterApi = {
         });
 
         jQuery('[id^="amount_"]').on('click', function() {
-            jQuery('[id^="amount_"]').each(function() {
-                var $this = jQuery(this);
-            });
+            self._writeItemList();
         });
 
         jQuery('#waiver_link').on('click', function(evt) {
             evt.preventDefault();
-            this.waiverRead = true;
             self._showWaiver();
+        });
+
+        jQuery('#waiver').on('click', function(evt) {
+            self.waiverRead = jQuery(this).prop('checked');
         });
 
         jQuery('#existing_member').on('click', function(evt) {
@@ -116,7 +192,7 @@ RosterApi = {
         }
     },
     _showWaiver: function() {
-        jQuery('#waiver_modal').dialog();
+        jQuery('#waiver_modal').dialog('open');
     }
 };
 
