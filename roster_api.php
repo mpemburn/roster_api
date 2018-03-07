@@ -161,7 +161,7 @@ class RosterAPI
     {
         $amounts = [];
 
-        if (!is_null($this->paypalAmounts)) {
+        if (!empty($this->paypalAmounts)) {
             $lines = explode(PHP_EOL, $this->paypalAmounts);
             foreach ($lines as $line) {
                 $lineParts = explode(':', $line);

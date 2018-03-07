@@ -11,6 +11,9 @@ RosterApi = {
     paypalSuccess: function() {
         self._doAjax('roster_api_update', 'member_update');
     },
+    getTotal: function() {
+        return parseFloat(this.duesAmount);
+    },
     getPaymentInfo: function() {
         var payment = {
             payment: {
@@ -24,8 +27,7 @@ RosterApi = {
             amount: {
                 total: this._getTotal(),
                 currency: "USD"
-            },
-            item_list: this._getItemList()
+            }
         }];
 
 //        if (this.extraItemsTotal > 0) {
@@ -64,9 +66,6 @@ RosterApi = {
     _getItemList: function() {
         return this.paypalItemList;
     },
-    _getTotal: function() {
-        return parseFloat(this.duesAmount) + parseFloat(this.extraItemsTotal);
-    },
     _handleFetchResponse: function(response) {
         jQuery('.form-error').remove();
         jQuery('#member_fetch_message').html(response.data).show();
@@ -80,41 +79,6 @@ RosterApi = {
                 this._showErrors(response.data.errors);
             }
         }
-    },
-    _writeItemList: function() {
-        var self = this;
-        var items =[];
-        var itemList = [];
-
-        this.paypalItemList = [];
-        this.extraItemsTotal = 0;
-
-        itemList['Dues'] = parseFloat(this.duesAmount);
-
-        jQuery('[id^="amount_"]').each(function() {
-            var $this = jQuery(this);
-            var amount = $this.val();
-            var label = $this.attr('data-label')
-            if ($this.prop('checked')) {
-                itemList[label] = parseFloat(amount);
-                self.extraItemsTotal += amount;
-            }
-        });
-
-        for (var label in itemList) {
-            if (itemList.hasOwnProperty(label)) {
-                var item = {
-                    name: label,
-                    description: label,
-                    quantity: "1",
-                    price: itemList[label],
-                    sku: "",
-                    currency: "USD"
-                }
-                items.push(item);
-            }
-        }
-        this.paypalItemList['items'] = items;
     },
     _setupDialog: function () {
         var self = this;
@@ -158,7 +122,7 @@ RosterApi = {
             var $this = jQuery(this);
             var isNew = ($this.val() === '0');
 
-            jQuery('#rapi_choice').hide();
+            //jQuery('#rapi_choice').hide();
             jQuery('#rapi_form').toggle(isNew);
             jQuery('#rapi_renew').toggle(!isNew);
         });
@@ -193,6 +157,41 @@ RosterApi = {
     },
     _showWaiver: function() {
         jQuery('#waiver_modal').dialog('open');
+    },
+    _writeItemList: function() {
+        var self = this;
+        var items =[];
+        var itemList = [];
+
+        this.paypalItemList = [];
+        this.extraItemsTotal = 0;
+
+        itemList['Dues'] = parseFloat(this.duesAmount);
+
+        jQuery('[id^="amount_"]').each(function() {
+            var $this = jQuery(this);
+            var amount = $this.val();
+            var label = $this.attr('data-label')
+            if ($this.prop('checked')) {
+                itemList[label] = parseFloat(amount);
+                self.extraItemsTotal += amount;
+            }
+        });
+
+        for (var label in itemList) {
+            if (itemList.hasOwnProperty(label)) {
+                var item = {
+                    name: label.replace(' ', '_').toLowerCase(),
+                    description: label,
+                    quantity: "1",
+                    price: itemList[label],
+                    sku: "",
+                    currency: "USD"
+                }
+                items.push(item);
+            }
+        }
+        this.paypalItemList = items;
     }
 };
 

@@ -1,7 +1,7 @@
 <div id="rapi_choice">
     <div>Please indicate whether you are a becoming a new member or renewing an existing membership</div>
     <div>
-        <label for="type_choice_new"><input id="type_choice_new" name="type_choice" type="radio" value="0">New Member</label>
+        <label for="type_choice_new"><input id="type_choice_new" name="type_choice" type="radio" value="0" checked>New Member</label>
     </div>
     <div>
         <label for="type_choice_renew"><input id="type_choice_renew" name="type_choice" type="radio" value="1">Renewing Member</label>
@@ -150,6 +150,7 @@
                         </div>
                         <div class="col-md-12 field-wrapper row">
                             <?php
+                            if (!empty($payments)) :
                                 $count = 1;
                                 foreach ( $payments as $label => $amount) : ?>
                             <div class="col-md-8">
@@ -162,7 +163,9 @@
                                 </div>
                             <?php
                                 $count++;
-                                endforeach; ?>
+                                endforeach;
+                            endif;
+                            ?>
                         </div>
                         <div class="col-md-12 field-wrapper row">
                             <div class="col-md-8">
