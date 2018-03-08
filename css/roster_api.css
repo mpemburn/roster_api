@@ -11,6 +11,13 @@
     display: none;
 }
 
+#paypal_wrapper {
+    pointer-events: none;
+    background-color: #ffffff;
+    opacity: 0.5;
+    z-index: 99;
+    cursor: default;
+}
 label.waiver {
     color: gray;
 }

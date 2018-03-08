@@ -145,6 +145,20 @@ RosterApi = {
             self._doAjax('roster_api_fetch', 'member_fetch');
         });
 
+        jQuery('input').on('keyup change', function(evt) {
+            var $this = jQuery(this);
+            var value = $this.val();
+            var truth = [];
+            if ($this.hasClass('required') {
+                truth.push((value != ''));
+            }
+            if (jQuery.inArray(false, truth) !== -1) {
+                alert('all true');
+            }
+
+        });
+
+
     },
     _showErrors: function(errors) {
         jQuery('.form-error').remove();

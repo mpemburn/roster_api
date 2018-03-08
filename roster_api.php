@@ -20,7 +20,7 @@ class RosterAPI
     protected $paypalAmounts;
     protected $duesAmount;
     protected $devMode = true;
-    protected $devApiUrl = 'https://cso_roster.test/api/';
+    protected $devApiUrl = 'https://cso_roster.test/api';
 
     public static function register()
     {
@@ -52,6 +52,8 @@ class RosterAPI
         $data['email'] = $data['member_email'];
         $data['zip'] = $data['member_zip'];
 
+        $this->loadSettings();
+
         $response = $this->getMemberDataOrFail($data);
 
         wp_send_json([
@@ -68,7 +70,7 @@ class RosterAPI
      */
     public function enqueueAssets()
     {
-        $version = '1.08';
+        $version = '1.10';
         wp_enqueue_style( 'wp-jquery-ui-dialog' );
         wp_enqueue_style( 'jquery-ui'. 'http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css' );
         wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
@@ -129,6 +131,8 @@ class RosterAPI
     {
         $data = $_POST['data'];
         parse_str($data, $parsed);
+
+        $this->loadSettings();
 
         $url = $this->apiUrl . '/member/post';
         $response = $this->makeApiCall('POST', $url, $parsed);

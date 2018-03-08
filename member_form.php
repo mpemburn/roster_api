@@ -174,7 +174,7 @@
                                     <input type="checkbox" id="waiver" name="waiver" disabled>I have read and agree to the liability waiver.
                                 </label>
                             </div>
-                            <div class="col-md-4">
+                            <div id="paypal_wrapper" class="col-md-4">
                                 <div id="paypal-button-container"></div>
                             </div>
                         </div>

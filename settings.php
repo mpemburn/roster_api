@@ -103,13 +103,13 @@ class AdminSettings
             'setting_section_id'
         );
 
-        add_settings_field(
-            'paypal_amounts',
-            'Additional Charges',
-            array( $this, 'paypalAmountsCallback' ),
-            'roster-api-setting-admin',
-            'setting_section_id'
-        );
+//        add_settings_field(
+//            'paypal_amounts',
+//            'Additional Charges',
+//            array( $this, 'paypalAmountsCallback' ),
+//            'roster-api-setting-admin',
+//            'setting_section_id'
+//        );
     }
 
     /**
