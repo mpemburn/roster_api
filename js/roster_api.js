@@ -3,19 +3,20 @@ RosterApi = {
     duesAmount: jsNamespace.duesAmount,
     extraItemsTotal: 0,
     paypalItemList: [],
-    validRequired: [],
-    init: function() {
+    validRequired: {},
+    init: function () {
         this._setupDialog();
+        this._loadValidations();
         this._setListeners();
         jQuery('#rapi_form').show();
     },
-    paypalSuccess: function() {
+    paypalSuccess: function () {
         self._doAjax('roster_api_update', 'member_update');
     },
-    getTotal: function() {
+    getTotal: function () {
         return parseFloat(this.duesAmount);
     },
-    getPaymentInfo: function() {
+    getPaymentInfo: function () {
         var payment = {
             payment: {
                 intent: "sale",
@@ -36,18 +37,18 @@ RosterApi = {
 //        }
         return payment;
     },
-    _doAjax: function(action, formId) {
+    _doAjax: function (action, formId) {
         var self = this;
         var formData = jQuery('#' + formId).serialize();
         jQuery.ajax({
-            type : "post",
-            dataType : "json",
-            url : jsNamespace.ajaxUrl,
-            data : {
+            type: "post",
+            dataType: "json",
+            url: jsNamespace.ajaxUrl,
+            data: {
                 action: action,
                 data: formData,
             },
-            success: function(response) {
+            success: function (response) {
                 if (response.action) {
                     if (response.action === 'fetch') {
                         self._handleFetchResponse(response);
@@ -59,26 +60,40 @@ RosterApi = {
                     console.log(response);
                 }
             },
-            error: function(response) {
+            error: function (response) {
                 console.log(response);
             }
         });
     },
-    _getItemList: function() {
+    _getItemList: function () {
         return this.paypalItemList;
     },
-    _handleFetchResponse: function(response) {
+    _handleFetchResponse: function (response) {
         jQuery('.form-error').remove();
         jQuery('#member_fetch_message').html(response.data).show();
         jQuery('#rapi_form').show();
         jQuery('#member_fields, #existing_member, #rapi_choice').hide();
     },
-    _handleUpdateResponse: function(response) {
+    _handleUpdateResponse: function (response) {
         if (response.success) {
         } else {
             if (response.data.errors !== undefined) {
                 this._showErrors(response.data.errors);
             }
+        }
+    },
+    _loadValidations: function () {
+        var self = this;
+        // Set all required fields to false to begin with
+        jQuery('#member_update *').filter(':input').each(function () {
+            self._setValid(jQuery(this), false);
+        });
+    },
+    _setValid: function ($this, truth) {
+        var value = $this.val();
+        var fieldName = $this.attr('name');
+        if ($this.hasClass('required')) {
+            this.validRequired[fieldName] = truth;
         }
     },
     _setupDialog: function () {
@@ -97,7 +112,7 @@ RosterApi = {
                 at: "center",
                 of: window
             },
-            open: function(evt, ui) {
+            open: function (evt, ui) {
                 jQuery(this).css('height', '300px');
             },
             close: function () {
@@ -119,7 +134,7 @@ RosterApi = {
     _setListeners: function () {
         var self = this;
 
-        jQuery('[name="type_choice"]').on('click', function() {
+        jQuery('[name="type_choice"]').on('click', function () {
             var $this = jQuery(this);
             var isNew = ($this.val() === '0');
 
@@ -128,40 +143,45 @@ RosterApi = {
             jQuery('#rapi_renew').toggle(!isNew);
         });
 
-        jQuery('[id^="amount_"]').on('click', function() {
+        jQuery('[id^="amount_"]').on('click', function () {
             self._writeItemList();
         });
 
-        jQuery('#waiver_link').on('click', function(evt) {
+        jQuery('#waiver_link').on('click', function (evt) {
             evt.preventDefault();
             self._showWaiver();
         });
 
-        jQuery('#waiver').on('click', function(evt) {
+        jQuery('#waiver').on('click', function (evt) {
             self.waiverRead = jQuery(this).prop('checked');
         });
 
-        jQuery('#existing_member').on('click', function(evt) {
+        jQuery('#existing_member').on('click', function (evt) {
             evt.preventDefault();
             self._doAjax('roster_api_fetch', 'member_fetch');
         });
 
-        jQuery('input').on('keyup change', function(evt) {
+        jQuery('#member_update *').filter(':input').on('keyup change', function (evt) {
             var $this = jQuery(this);
-            var value = $this.val();
-            var fieldName = $this.attr('name');
-            if ($this.hasClass('required')) {
-                self.validRequired[fieldName] = (value != '');
-            }
-            if (jQuery.inArray(false, self.validRequired) !== -1) {
-                alert('all true');
-            }
+            var isValid = true;
 
+            self._setValid(jQuery(this), ($this.val() !== ''));
+
+            for  (var field in self.validRequired) {
+                if (self.validRequired.hasOwnProperty(field)) {
+                    if (!self.validRequired[field]) {
+                        isValid = false;
+                    }
+                }
+            }
+            if (isValid) {
+                alert('Did it!');
+            }
         });
 
 
     },
-    _showErrors: function(errors) {
+    _showErrors: function (errors) {
         jQuery('.form-error').remove();
         for (var key in errors) {
             if (errors.hasOwnProperty(key)) {
@@ -170,12 +190,12 @@ RosterApi = {
             }
         }
     },
-    _showWaiver: function() {
+    _showWaiver: function () {
         jQuery('#waiver_modal').dialog('open');
     },
-    _writeItemList: function() {
+    _writeItemList: function () {
         var self = this;
-        var items =[];
+        var items = [];
         var itemList = [];
 
         this.paypalItemList = [];
@@ -183,7 +203,7 @@ RosterApi = {
 
         itemList['Dues'] = parseFloat(this.duesAmount);
 
-        jQuery('[id^="amount_"]').each(function() {
+        jQuery('[id^="amount_"]').each(function () {
             var $this = jQuery(this);
             var amount = $this.val();
             var label = $this.attr('data-label')
