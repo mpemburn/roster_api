@@ -174,12 +174,9 @@ RosterApi = {
                     }
                 }
             }
-            if (isValid) {
-                alert('Did it!');
-            }
+
+            this._toggleValidation(isValid);
         });
-
-
     },
     _showErrors: function (errors) {
         jQuery('.form-error').remove();
@@ -192,6 +189,11 @@ RosterApi = {
     },
     _showWaiver: function () {
         jQuery('#waiver_modal').dialog('open');
+    },
+    _toggleValidation: function (isValid) {
+        if (isValid) {
+            
+        }
     },
     _writeItemList: function () {
         var self = this;
