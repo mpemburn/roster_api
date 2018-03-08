@@ -3,6 +3,7 @@ RosterApi = {
     duesAmount: jsNamespace.duesAmount,
     extraItemsTotal: 0,
     paypalItemList: [],
+    validRequired: [],
     init: function() {
         this._setupDialog();
         this._setListeners();
@@ -148,11 +149,11 @@ RosterApi = {
         jQuery('input').on('keyup change', function(evt) {
             var $this = jQuery(this);
             var value = $this.val();
-            var truth = [];
-            if ($this.hasClass('required') {
-                truth.push((value != ''));
+            var fieldName = $this.attr('name');
+            if ($this.hasClass('required')) {
+                self.validRequired[fieldName] = (value != '');
             }
-            if (jQuery.inArray(false, truth) !== -1) {
+            if (jQuery.inArray(false, self.validRequired) !== -1) {
                 alert('all true');
             }
 
