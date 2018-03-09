@@ -18,6 +18,21 @@
     z-index: 99;
     cursor: default;
 }
+
+#waiver_wrapper {
+    display: none;
+}
+
+input.required,
+select.required {
+    border: 1px solid #ff9c97 !important;
+}
+
+input.valid,
+select.valid {
+    border: 1px solid #000000 !important;
+}
+
 label.waiver {
     color: gray;
 }

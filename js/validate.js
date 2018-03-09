@@ -22,6 +22,11 @@ var Validate = {
         if ($this.hasClass('required')) {
             this.validRequired[fieldName] = truth;
         }
+
+        return truth;
+    },
+    _toggleValid: function ($this, isValid) {
+        $this.toggleClass();
     },
     _listen: function() {
         var self = this;
@@ -31,7 +36,8 @@ var Validate = {
             var $this = jQuery(this);
             var isValid = true;
 
-            self._setValid(jQuery(this), ($this.val() !== ''));
+            var valid = self._setValid(jQuery(this), ($this.val() !== ''));
+            self._toggleValid($this, valid);
 
             for  (var field in self.validRequired) {
                 if (self.validRequired.hasOwnProperty(field)) {

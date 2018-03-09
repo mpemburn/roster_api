@@ -13,7 +13,7 @@
             <div class="col-md-12 row">
                 <div class="col-md-8">
                     <label for="email" class="col-md-12 control-label">Email</label>
-                    <input class="col-md-12 required" placeholder="Email *" name="member_email" type="email" value="">
+                    <input class="col-md-12 required valid" placeholder="Email *" name="member_email" type="email" value="">
                 </div>
                 <div class="col-md-3">
                     <label for="zip" class="col-md-12 control-label">Zip</label>
@@ -169,10 +169,12 @@
                         </div>
                         <div class="col-md-12 field-wrapper row">
                             <div class="col-md-8">
-                                Please read the <a id="waiver_link" href="">WAIVER OF LIABILITY</a>
-                                <label for="waiver" class="waiver">
-                                    <input type="checkbox" id="waiver" name="waiver" disabled>I have read and agree to the liability waiver.
-                                </label>
+                                <div id="waiver_wrapper">
+                                    Please read the <a id="waiver_link" href="">WAIVER OF LIABILITY</a>
+                                    <label for="waiver" class="waiver">
+                                        <input type="checkbox" id="waiver" name="waiver" disabled>I have read and agree to the liability waiver.
+                                    </label>
+                                </div>
                             </div>
                             <div id="paypal_wrapper" class="col-md-4">
                                 <div id="paypal-button-container"></div>

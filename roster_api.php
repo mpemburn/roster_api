@@ -19,7 +19,7 @@ class RosterAPI
     protected $paypalProductionKey;
     protected $paypalAmounts;
     protected $duesAmount;
-    protected $devMode = true;
+    protected $devMode = false;
     protected $devApiUrl = 'https://cso_roster.test/api';
 
     public static function register()
@@ -70,8 +70,7 @@ class RosterAPI
      */
     public function enqueueAssets()
     {
-        $version = '1.0';
-        wp_enqueue_style( 'wp-jquery-ui-dialog' );
+        $version = '1.04';
         wp_enqueue_style( 'jquery-ui'. 'http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css' );
         wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
         wp_enqueue_style('roster_api', plugin_dir_url(__FILE__) . 'css/roster_api.css', '', $version);
@@ -82,6 +81,7 @@ class RosterAPI
         wp_enqueue_script('paypal', 'https://www.paypalobjects.com/api/checkout.js');
         wp_register_script('validate', plugin_dir_url(__FILE__) . 'js/validate.js', '', $version, true);
         wp_enqueue_script('validate');
+        wp_enqueue_style( 'wp-jquery-ui-dialog' );
         wp_register_script('roster_api', plugin_dir_url(__FILE__) . 'js/roster_api.js', '', $version, true);
         wp_enqueue_script('roster_api');
         wp_register_script('paypal_button', plugin_dir_url(__FILE__) . 'js/paypal_button.js', '', $version, true);

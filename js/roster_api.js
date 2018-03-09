@@ -39,13 +39,16 @@ RosterApi = {
     _chooseAction: function (isNew) {
         var formId = (isNew) ? '#member_update' : '#member_fetch';
         var formCallback = (isNew) ? this._newValidation : this._renewalValidation;
-        this.validator =  Object.create(Validate);
-        this.validator.init({
+        //this.validator =  Object.create(Validate);
+        Validate.init({
             formId: formId,
             callback: formCallback
         });
 
-        jQuery('#rapi_form').toggle(isNew);
+        if (isNew) {
+            this._enablePayPalButton();
+        }
+        jQuery('#rapi_form, #waiver_wrapper').toggle(isNew);
         jQuery('#rapi_renew').toggle(!isNew);
     },
     _doAjax: function (action, formId) {
@@ -57,7 +60,7 @@ RosterApi = {
             url: jsNamespace.ajaxUrl,
             data: {
                 action: action,
-                data: formData,
+                data: formData
             },
             success: function (response) {
                 if (response.action) {
@@ -82,8 +85,15 @@ RosterApi = {
             'pointer-events': 'auto'
         });
     },
-    _enableFetchButton: function() {
-        jQuery('#existing_member').prop('disabled', false);
+    _enableFetchButton: function () {
+        var self = this;
+        jQuery('#existing_member')
+            .prop('disabled', false)
+            .off()
+            .on('click', function (evt) {
+                evt.preventDefault();
+                self._doAjax('roster_api_fetch', 'member_fetch');
+            });
     },
     _getItemList: function () {
         return this.paypalItemList;
@@ -160,19 +170,6 @@ RosterApi = {
             self.waiverRead = jQuery(this).prop('checked');
         });
 
-        jQuery('#existing_member').on('click', function (evt) {
-            evt.preventDefault();
-            self._doAjax('roster_api_fetch', 'member_fetch');
-        });
-    },
-    _showErrors: function (errors) {
-        jQuery('.form-error').remove();
-        for (var key in errors) {
-            if (errors.hasOwnProperty(key)) {
-                var $field = jQuery('[name="' + key + '"]');
-                $field.after('<div class="form-error">' + errors[key] + '</div>');
-            }
-        }
     },
     _showWaiver: function () {
         jQuery('#waiver_modal').dialog('open');
