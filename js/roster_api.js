@@ -3,12 +3,11 @@ RosterApi = {
     duesAmount: jsNamespace.duesAmount,
     extraItemsTotal: 0,
     paypalItemList: [],
-    validRequired: {},
+    validator: null,
     init: function () {
         this._setupDialog();
-        this._loadValidations();
         this._setListeners();
-        jQuery('#rapi_form').show();
+        this._chooseAction(true);
     },
     paypalSuccess: function () {
         self._doAjax('roster_api_update', 'member_update');
@@ -36,6 +35,18 @@ RosterApi = {
 //            payment['transactions']['item_list'] = this._getItemList();
 //        }
         return payment;
+    },
+    _chooseAction: function (isNew) {
+        var formId = (isNew) ? '#member_update' : '#member_fetch';
+        var formCallback = (isNew) ? this._newValidation : this._renewalValidation;
+        this.validator =  Object.create(Validate);
+        this.validator.init({
+            formId: formId,
+            callback: formCallback
+        });
+
+        jQuery('#rapi_form').toggle(isNew);
+        jQuery('#rapi_renew').toggle(!isNew);
     },
     _doAjax: function (action, formId) {
         var self = this;
@@ -65,6 +76,15 @@ RosterApi = {
             }
         });
     },
+    _enablePayPalButton: function() {
+        jQuery('#paypal_wrapper').css({
+            'opacity': '1.0',
+            'pointer-events': 'auto'
+        });
+    },
+    _enableFetchButton: function() {
+        jQuery('#existing_member').prop('disabled', false);
+    },
     _getItemList: function () {
         return this.paypalItemList;
     },
@@ -80,20 +100,6 @@ RosterApi = {
             if (response.data.errors !== undefined) {
                 this._showErrors(response.data.errors);
             }
-        }
-    },
-    _loadValidations: function () {
-        var self = this;
-        // Set all required fields to false to begin with
-        jQuery('#member_update *').filter(':input').each(function () {
-            self._setValid(jQuery(this), false);
-        });
-    },
-    _setValid: function ($this, truth) {
-        var value = $this.val();
-        var fieldName = $this.attr('name');
-        if ($this.hasClass('required')) {
-            this.validRequired[fieldName] = truth;
         }
     },
     _setupDialog: function () {
@@ -138,9 +144,7 @@ RosterApi = {
             var $this = jQuery(this);
             var isNew = ($this.val() === '0');
 
-            //jQuery('#rapi_choice').hide();
-            jQuery('#rapi_form').toggle(isNew);
-            jQuery('#rapi_renew').toggle(!isNew);
+            self._chooseAction(isNew);
         });
 
         jQuery('[id^="amount_"]').on('click', function () {
@@ -160,23 +164,6 @@ RosterApi = {
             evt.preventDefault();
             self._doAjax('roster_api_fetch', 'member_fetch');
         });
-
-        jQuery('#member_update *').filter(':input').on('keyup change', function (evt) {
-            var $this = jQuery(this);
-            var isValid = true;
-
-            self._setValid(jQuery(this), ($this.val() !== ''));
-
-            for  (var field in self.validRequired) {
-                if (self.validRequired.hasOwnProperty(field)) {
-                    if (!self.validRequired[field]) {
-                        isValid = false;
-                    }
-                }
-            }
-
-            this._toggleValidation(isValid);
-        });
     },
     _showErrors: function (errors) {
         jQuery('.form-error').remove();
@@ -190,9 +177,14 @@ RosterApi = {
     _showWaiver: function () {
         jQuery('#waiver_modal').dialog('open');
     },
-    _toggleValidation: function (isValid) {
+    _newValidation: function (isValid) {
         if (isValid) {
-            
+            RosterApi._enablePayPalButton();
+        }
+    },
+    _renewalValidation: function (isValid) {
+        if (isValid) {
+            RosterApi._enableFetchButton();
         }
     },
     _writeItemList: function () {

@@ -22,7 +22,7 @@
             </div>
             <div id="member_fetch_button" class="col-md-11">
                 <div class="col-md-12 field-wrapper text-right">
-                    <button class="button" id="existing_member" name="existing_member">Submit</button>
+                    <button class="button" id="existing_member" name="existing_member" disabled>Submit</button>
                 </div>
             </div>
             <div class="col-md-12" id="member_fetch_message"></div>
