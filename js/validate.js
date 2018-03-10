@@ -26,7 +26,7 @@ var Validate = {
         return truth;
     },
     _toggleValid: function ($this, isValid) {
-        $this.toggleClass();
+        $this.toggleClass('valid', isValid);
     },
     _listen: function() {
         var self = this;

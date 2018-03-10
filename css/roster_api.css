@@ -1,10 +1,24 @@
+#rapi {
+    font-family: Montserrat, "Helvetica Neue", sans-serif;
+}
+
 #rapi_renew,
 #rapi_form {
     display: none;
 }
 
+#form_body {
+    padding: 1rem;
+    border: 1px solid #d1d1d1;
+}
+
 #member_fetch_error {
     display: none;
+}
+
+button#existing_member {
+    margin-top: 1rem;
+    margin-right: 2rem;
 }
 
 #waiver_modal {
@@ -23,14 +37,8 @@
     display: none;
 }
 
-input.required,
-select.required {
-    border: 1px solid #ff9c97 !important;
-}
-
-input.valid,
-select.valid {
-    border: 1px solid #000000 !important;
+label.control-label {
+    padding: 0 5px;
 }
 
 label.waiver {
@@ -44,7 +52,33 @@ label.waiver {
     color: #ff0000;
 }
 
+input,
+select {
+    height: 2rem;
+    font-family: Montserrat, "Helvetica Neue", sans-serif !important;
+}
+
+input.required,
+select.required {
+    border: 1px solid #ff9c97 !important;
+}
+
+input.valid,
+select.valid {
+    border: 1px solid #d1d1d1 !important;
+}
+
 input.disable {
     border: none;
 }
 
+input[type="radio"],
+input[type="checkbox"] {
+    margin-top: -1px;
+    vertical-align: middle;
+}
+
+.field-wrapper {
+    padding: 0 5px;
+    margin-bottom: 5px;
+}
