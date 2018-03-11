@@ -1,6 +1,5 @@
 <div id="rapi">
     <div id="rapi_choice">
-        <div>Please indicate whether you are a becoming a new member or renewing an existing membership</div>
         <div>
             <label for="type_choice_new"><input id="type_choice_new" name="type_choice" type="radio" value="0" checked>
                 <strong>New Member</strong>
@@ -13,6 +12,8 @@
         </div>
     </div> <!-- rapi_choice -->
     <div id="rapi_renew">
+        <div>You'll need to enter the email address you used to sign up for your original membership, as well as the original zip code.
+            Please <a href="contact">contact us</a> if you do not have that information:</div>
         <form method="POST" accept-charset="UTF-8" id="member_fetch">
             <div class="form-group">
                 <div class="col-md-12 row">
@@ -30,7 +31,7 @@
                         <button class="ui-button" id="existing_member" name="existing_member" disabled>Submit</button>
                     </div>
                 </div>
-                <div class="col-md-12" id="member_fetch_message"></div>
+                <div class="col-md-12" id="member_fetch_message">* Indicates required field.</div>
             </div>
         </form>
     </div>  <!-- rapi_renew -->
@@ -148,7 +149,9 @@
                                     &nbsp;
                                 </div>
                                 <div class="col-md-4">
-                                    Dues: $<?php echo $dues; ?>
+                                    <h4>
+                                        Dues: $<?php echo $dues; ?>
+                                    </h4>
                                 </div>
                             </div>
                             <div class="col-md-12 field-wrapper row">

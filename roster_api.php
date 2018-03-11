@@ -153,7 +153,7 @@ class RosterAPI
     protected function getFetchMessage($success)
     {
         if ($success) {
-            $message = 'Thanks! Please continue your renewal process by clicking the PayPal button.';
+            $message = 'Thanks! Please continue your renewal process by clicking the <strong>PayPal</strong> button.';
         } else {
             $message = 'Sorry! We were unable to find a member with that email address and zip code in our database.
                 You may have used a different email address to sign up originally.
