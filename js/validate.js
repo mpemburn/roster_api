@@ -1,5 +1,6 @@
 var Validate = {
     formId: '',
+    caller: null,
     callback: function() {},
     validRequired: {},
     init: function(options) {
@@ -47,7 +48,7 @@ var Validate = {
                 }
             }
 
-            self.callback(isValid);
+            self.callback(self.caller, isValid);
         });
     }
 

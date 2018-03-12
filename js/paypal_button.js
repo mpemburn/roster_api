@@ -8,6 +8,13 @@ paypal.Button.render({
         production: jsNamespace.paypalProductionKey
     },
 
+    style: {
+            size: 'medium',
+            color: 'gold',
+            shape: 'rect',
+            label: 'checkout'
+    },
+
     // Show the buyer a 'Pay Now' button in the checkout flow
     commit: true,
 

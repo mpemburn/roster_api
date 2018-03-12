@@ -70,7 +70,7 @@ class RosterAPI
      */
     public function enqueueAssets()
     {
-        $version = '1.01';
+        $version = '1.05';
         wp_enqueue_style( 'jquery-ui'. 'http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css' );
         wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
         wp_enqueue_style('roster_api', plugin_dir_url(__FILE__) . 'css/roster_api.css', '', $version);
@@ -98,8 +98,6 @@ class RosterAPI
     }
 
     public function memberFormHandler( $att, $content ) {
-        $prefixes = ['Mr.', 'Mrs.', 'Ms.', 'Hon.', 'Dr.'];
-        $suffixes = ['Jr.', 'Sr.', 'II', 'III', 'MD', 'DDS', 'PA', 'JD', 'OD'];
         $states = ['DC', 'DE', 'MD', 'NJ', 'NY', 'PA', 'VA'];
         $dues = $this->duesAmount;
         $payments = $this->getPaypalAmounts();

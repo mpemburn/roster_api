@@ -41,39 +41,19 @@
             <input name="active" type="hidden" value="">
             <div class="panel-body row">
                 <main id="form_body" class="main-column col-md-12">
+                    <div class="col-md-12" id="required_message">* Indicates required field.</div>
                     <div id="member_fields">
                         <div class="form-group">
                             <label for="name" class="col-md-3 control-label">Name</label>
                             <div class="col-md-12 row">
-                                <div class="col-md-2 field-wrapper">
-                                    <select class="col-md-12" name="prefix">
-                                        <option value="">Select</option>
-                                        <?php foreach ($prefixes as $prefix) :
-                                            $selected = ($prefix == $user->prefix) ? 'selected' : '';
-                                            ?>
-                                            <option value="<?php echo $prefix; ?>" <?php echo $selected; ?>><?php echo $prefix; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
                                 <div class="col-md-3 field-wrapper">
                                     <input class="col-md-12 required" placeholder="First Name *" name="first_name" type="text" value="">
                                 </div>
-                                <div class="col-md-2 field-wrapper">
+                                <div class="col-md-3 field-wrapper">
                                     <input class="col-md-12" placeholder="Middle" name="middle_name" type="text" value="">
                                 </div>
-                                <div class="col-md-3 field-wrapper">
+                                <div class="col-md-4 field-wrapper">
                                     <input class="col-md-12 required" placeholder="Last Name *" name="last_name" type="text" value="">
-                                </div>
-                                <div class="col-md-2 field-wrapper">
-                                    <select class="col-md-12 field-wrapper" name="suffix">
-                                        <option value="">Select</option>
-                                        <?php foreach ($suffixes as $suffix) :
-                                            $selected = ($suffix == $user->suffix) ? 'selected' : '';
-                                            ?>
-                                            <option
-                                                value="<?php echo $suffix; ?>" <?php echo $selected; ?>><?php echo $suffix; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -119,13 +99,13 @@
                         <div class="form-group">
                             <label for="address" class="col-md-3 control-label">Cell phone</label>
                             <div class="col-md-3 field-wrapper">
-                                <input class="col-md-12" placeholder="Cell Phone" name="cell_phone" type="text" value="">
+                                <input class="col-md-12 required" placeholder="Cell Phone *" name="cell_phone" type="text" value="">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="address" class="col-md-3 control-label">Emergency Contact</label>
                             <div class="col-md-9 row">
-                                <div class="col-md-10 field-wrapper">
+                                <div class="col-md-8 field-wrapper">
                                     <input class="col-md-12 required" placeholder="Contact Name *" name="contact_name" type="text" value="">
                                 </div>
                             </div>
@@ -176,9 +156,9 @@
                             <div class="col-md-12 field-wrapper row">
                                 <div class="col-md-8">
                                     <div id="waiver_wrapper">
-                                        Please read the <a id="waiver_link" href="">WAIVER OF LIABILITY</a>
+                                        Please read the <a id="waiver_link" href=""><strong>WAIVER OF LIABILITY</strong></a>
                                         <label for="waiver" class="waiver">
-                                            <input type="checkbox" id="waiver" name="waiver" disabled>I have read and agree to the liability waiver.
+                                            <input type="checkbox" id="waiver" name="waiver" disabled>* I have read and agree to the liability waiver.
                                         </label>
                                     </div>
                                 </div>

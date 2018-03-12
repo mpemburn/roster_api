@@ -1,4 +1,5 @@
 RosterApi = {
+    formValid: false,
     waiverRead: false,
     duesAmount: jsNamespace.duesAmount,
     extraItemsTotal: 0,
@@ -16,6 +17,7 @@ RosterApi = {
         return parseFloat(this.duesAmount);
     },
     getPaymentInfo: function () {
+    // TODO: Implement this for additional items
         var payment = {
             payment: {
                 intent: "sale",
@@ -30,10 +32,6 @@ RosterApi = {
                 currency: "USD"
             }
         }];
-
-//        if (this.extraItemsTotal > 0) {
-//            payment['transactions']['item_list'] = this._getItemList();
-//        }
         return payment;
     },
     _chooseAction: function (isNew) {
@@ -42,10 +40,11 @@ RosterApi = {
         //this.validator =  Object.create(Validate);
         Validate.init({
             formId: formId,
+            caller: this,
             callback: formCallback
         });
 
-        if (isNew) {
+        if (! isNew) {
             this._enablePayPalButton();
         }
         jQuery('#rapi_form, #waiver_wrapper').toggle(isNew);
@@ -80,9 +79,11 @@ RosterApi = {
         });
     },
     _enablePayPalButton: function() {
+        var valid = (this.waiverRead && this.formValid);
+
         jQuery('#paypal_wrapper').css({
-            'opacity': '1.0',
-            'pointer-events': 'auto'
+            'opacity': (valid) ? '1.0' : '0.5',
+            'pointer-events': (valid) ? 'auto' : 'none'
         });
     },
     _enableFetchButton: function () {
@@ -102,7 +103,8 @@ RosterApi = {
         jQuery('.form-error').remove();
         jQuery('#member_fetch_message').html(response.data).show();
         jQuery('#rapi_form').show();
-        jQuery('#member_fields, #existing_member, #rapi_choice').hide();
+        jQuery('#member_fields, #existing_member, #rapi_choice, #required_message').hide();
+        this._enablePayPalButton();
     },
     _handleUpdateResponse: function (response) {
         if (response.success) {
@@ -129,12 +131,20 @@ RosterApi = {
                 of: window
             },
             open: function (evt, ui) {
-                jQuery(this).css('height', '300px');
+                var top = jQuery('html').offset().top;
+                var height = jQuery(window).height();
+                jQuery(this).css({
+                    'top': top,
+                    'height': (height * .7)
+                    });
             },
             close: function () {
                 jQuery('label.waiver').css('color', 'black');
-                jQuery('#waiver').prop('disabled', false);
+                jQuery('#waiver')
+                    .prop('disabled', false)
+                    .prop('checked', true);
                 self.waiverRead = true;
+                self._enablePayPalButton();
             },
             create: function () {
                 // Style fix for WordPress admin
@@ -161,7 +171,7 @@ RosterApi = {
             self._writeItemList();
         });
 
-        jQuery('#waiver_link').on('click', function (evt) {
+        jQuery('#waiver_link, #waiver_wrapper').on('click', function (evt) {
             evt.preventDefault();
             self._showWaiver();
         });
@@ -174,14 +184,15 @@ RosterApi = {
     _showWaiver: function () {
         jQuery('#waiver_modal').dialog('open');
     },
-    _newValidation: function (isValid) {
-        if (isValid) {
-            RosterApi._enablePayPalButton();
-        }
+    _newValidation: function (self, isValid) {
+        self.formValid = isValid;
+        self._enablePayPalButton();
     },
-    _renewalValidation: function (isValid) {
+    _renewalValidation: function (self, isValid) {
         if (isValid) {
-            RosterApi._enableFetchButton();
+            self.formValid = isValid;
+            self.waiverRead = true;
+            self._enableFetchButton();
         }
     },
     _writeItemList: function () {
