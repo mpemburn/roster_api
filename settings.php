@@ -103,6 +103,14 @@ class AdminSettings
             'setting_section_id'
         );
 
+        add_settings_field(
+            'waiver_page',
+            'Waiver Page',
+            array( $this, 'waiverPageCallback' ),
+            'roster-api-setting-admin',
+            'setting_section_id'
+        );
+
 //        add_settings_field(
 //            'paypal_amounts',
 //            'Additional Charges',
@@ -136,9 +144,13 @@ class AdminSettings
             $new_input['dues_amount'] = $input['dues_amount'];
         }
 
-        if (isset($input['paypal_amounts'])) {
-            $new_input['paypal_amounts'] = $input['paypal_amounts'];
+        if (isset($input['waiver_page'])) {
+            $new_input['waiver_page'] = $input['waiver_page'];
         }
+
+//        if (isset($input['paypal_amounts'])) {
+//            $new_input['paypal_amounts'] = $input['paypal_amounts'];
+//        }
 
         return $new_input;
     }
@@ -198,6 +210,25 @@ class AdminSettings
     /**
      * Get the settings option array and print one of its values
      */
+    public function waiverPageCallback()
+    {
+        $pages = $this->getPages();
+        $waiverPage = isset( $this->options['waiver_page'] ) ? esc_attr( $this->options['waiver_page']) : '';
+
+        $html = '<select style="width: 15rem;" id="waiver_page" name="roster_option_name[waiver_page]">';
+        $html .= '<option value=""> -- Select --</option >';
+        foreach ($pages as $slug => $page) {
+            $selected = ($slug == $waiverPage) ? ' selected' : '';
+            $html .= '<option value="' . $slug . '"' . $selected . '>' . $page . '</option >';
+        }
+        $html .= '</select >';
+
+        printf($html);
+    }
+
+    /**
+     * Get the settings option array and print one of its values
+     */
     public function paypalAmountsCallback()
     {
         printf(
@@ -207,4 +238,31 @@ class AdminSettings
         );
     }
 
+    protected function getPages()
+    {
+        $args = array(
+            'sort_order' => 'asc',
+            'sort_column' => 'post_title',
+            'hierarchical' => 1,
+            'exclude' => '',
+            'include' => '',
+            'meta_key' => '',
+            'meta_value' => '',
+            'authors' => '',
+            'child_of' => 0,
+            'parent' => -1,
+            'exclude_tree' => '',
+            'number' => '',
+            'offset' => 0,
+            'post_type' => 'page',
+            'post_status' => 'publish'
+        );
+        $pages = get_pages($args);
+
+        $pageSelect = [];
+        foreach ($pages as $page) {
+            $pageSelect[$page->post_name] = $page->post_title;
+        }
+        return $pageSelect;
+    }
 }

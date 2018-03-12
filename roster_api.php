@@ -19,6 +19,7 @@ class RosterAPI
     protected $paypalProductionKey;
     protected $paypalAmounts;
     protected $duesAmount;
+    protected $waiverPage;
     protected $devMode = false;
     protected $devApiUrl = 'https://cso_roster.test/api';
 
@@ -161,6 +162,21 @@ class RosterAPI
         return $message;
     }
 
+    protected function getPageBySlug($slug)
+    {
+        $query = new WP_Query(
+            array(
+                'name'   => $slug,
+                'post_type'   => 'page',
+                'numberposts' => 1,
+                'fields'      => 'ids',
+            ) );
+        $posts = $query->get_posts();
+        $pageId = array_shift( $posts );
+
+        return get_post($pageId);
+    }
+
     protected function getPaypalAmounts()
     {
         $amounts = [];
@@ -184,7 +200,7 @@ class RosterAPI
 
     protected function getLegalContent()
     {
-        $content_post = get_post(11);
+        $content_post = $this->getPageBySlug($this->waiverPage);
         $content = $content_post->post_content;
         $content = apply_filters('the_content', $content);
         $content = str_replace(']]>', ']]&gt;', $content);
@@ -203,6 +219,7 @@ class RosterAPI
             $this->paypalSandboxKey = $settings->paypal_sandbox;
             $this->paypalProductionKey = $settings->paypal_production;
             $this->duesAmount = $settings->dues_amount;
+            $this->waiverPage = $settings->waiver_page;
             $this->paypalAmounts = $settings->paypal_amounts;
 
         }
