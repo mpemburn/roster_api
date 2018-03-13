@@ -11,7 +11,7 @@ RosterApi = {
         this._chooseAction(true);
     },
     paypalSuccess: function () {
-        self._doAjax('roster_api_update', 'member_update');
+        this._doAjax('roster_api_update', 'member_update');
     },
     getTotal: function () {
         return parseFloat(this.duesAmount);
@@ -36,7 +36,7 @@ RosterApi = {
     },
     _chooseAction: function (isNew) {
         var formId = (isNew) ? '#member_update' : '#member_fetch';
-        var formCallback = (isNew) ? this._newValidation : this._renewalValidation;
+        var formCallback = (isNew) ? this._validateNewMember : this._validateRenewal;
         //this.validator =  Object.create(Validate);
         Validate.init({
             formId: formId,
@@ -44,6 +44,8 @@ RosterApi = {
             callback: formCallback
         });
 
+        this._toggleProcessType(isNew);
+        
         if (! isNew) {
             this._enablePayPalButton();
         }
@@ -127,7 +129,7 @@ RosterApi = {
             closeOnEscape: true,
             position: {
                 my: "center",
-                at: "center",
+                at: "top",
                 of: window
             },
             open: function (evt, ui) {
@@ -184,11 +186,16 @@ RosterApi = {
     _showWaiver: function () {
         jQuery('#waiver_modal').dialog('open');
     },
-    _newValidation: function (self, isValid) {
+    _toggleProcessType: function (isNew) {
+        var type = (isNew) ? 'new_member' : 'renewal';
+
+        jQuery('[name="process_type"]').val(type);
+    },
+    _validateNewMember: function (self, isValid) {
         self.formValid = isValid;
         self._enablePayPalButton();
     },
-    _renewalValidation: function (self, isValid) {
+    _validateRenewal: function (self, isValid) {
         if (isValid) {
             self.formValid = isValid;
             self.waiverRead = true;

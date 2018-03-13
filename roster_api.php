@@ -71,7 +71,7 @@ class RosterAPI
      */
     public function enqueueAssets()
     {
-        $version = '1.05';
+        $version = '1.00';
         wp_enqueue_style( 'jquery-ui'. 'http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css' );
         wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
         wp_enqueue_style('roster_api', plugin_dir_url(__FILE__) . 'css/roster_api.css', '', $version);
@@ -103,6 +103,7 @@ class RosterAPI
         $dues = $this->duesAmount;
         $payments = $this->getPaypalAmounts();
         $legal = $this->getLegalContent();
+        $process_type = 'new_member';
 
         ob_start();
         include 'member_form.php';
@@ -135,7 +136,7 @@ class RosterAPI
 
         $this->loadSettings();
 
-        $url = $this->apiUrl . '/member/post';
+        $url = $this->apiUrl . '/member/payment';
         $response = $this->makeApiCall('POST', $url, $parsed);
         $responseBody = json_decode($response['body']);
         $success = (!empty($responseBody) && (!property_exists($responseBody, 'errors')));
@@ -162,7 +163,7 @@ class RosterAPI
         return $message;
     }
 
-    protected function getPageBySlug($slug)
+    protected function getPageIdFromSlug($slug)
     {
         $query = new WP_Query(
             array(
@@ -174,7 +175,7 @@ class RosterAPI
         $posts = $query->get_posts();
         $pageId = array_shift( $posts );
 
-        return get_post($pageId);
+        return $pageId;
     }
 
     protected function getPaypalAmounts()
@@ -200,8 +201,15 @@ class RosterAPI
 
     protected function getLegalContent()
     {
-        $content_post = $this->getPageBySlug($this->waiverPage);
-        $content = $content_post->post_content;
+        global $post;
+
+        $waiverPageId = $this->getPageIdFromSlug($this->waiverPage);
+
+        if ($waiverPageId == $post->ID) {
+            return 'An error has occurred on this page: Waiver Page is not set correctly in Settings>RosterAPI. Must not be set to a page containing the [memberform] shortcode.';
+        }
+        $contentPost = get_post($waiverPageId);
+        $content = $contentPost->post_content;
         $content = apply_filters('the_content', $content);
         $content = str_replace(']]>', ']]&gt;', $content);
 
@@ -230,6 +238,7 @@ class RosterAPI
     {
         $response = null;
 
+        // Future security enhancement
         $username = 'your-username';
         $password = 'your-password';
         $headers = array( 'Authorization' => 'Basic ' . base64_encode( "$username:$password" ) );

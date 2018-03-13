@@ -24,6 +24,9 @@ button#existing_member {
 #waiver_modal {
     display: none;
 }
+#paypal {
+    padding-right: 2rem !important;
+}
 
 #paypal_wrapper {
     pointer-events: none;

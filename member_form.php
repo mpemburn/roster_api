@@ -39,6 +39,8 @@
         <form method="POST" accept-charset="UTF-8" id="member_update">
             <input name="id" type="hidden" value="">
             <input name="active" type="hidden" value="">
+            <input name="paid_amount" type="hidden" value="<?php echo $dues; ?>">
+            <input name="process_type" type="hidden" value="<?php echo $process_type; ?>">
             <div class="panel-body row">
                 <main id="form_body" class="main-column col-md-12">
                     <div class="col-md-12" id="required_message">* Indicates required field.</div>
