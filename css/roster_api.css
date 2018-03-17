@@ -16,6 +16,10 @@
     display: none;
 }
 
+#test_button_wrapper {
+    display: block;
+}
+
 button#existing_member {
     margin-top: 1rem;
     margin-right: 2rem;

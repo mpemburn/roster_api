@@ -36,6 +36,9 @@
         </form>
     </div>  <!-- rapi_renew -->
     <div id="rapi_form">
+        <div id="test_button_wrapper" class="col-md-4">
+            <button class="ui-button" id="test_button">Test</button>
+        </div>
         <form method="POST" accept-charset="UTF-8" id="member_update">
             <input name="id" type="hidden" value="">
             <input name="active" type="hidden" value="">

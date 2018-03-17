@@ -111,6 +111,14 @@ class AdminSettings
             'setting_section_id'
         );
 
+        add_settings_field(
+            'confirmation_page',
+            'Confirmation Page',
+            array( $this, 'confirmationPageCallback' ),
+            'roster-api-setting-admin',
+            'setting_section_id'
+        );
+
 //        add_settings_field(
 //            'paypal_amounts',
 //            'Additional Charges',
@@ -146,6 +154,10 @@ class AdminSettings
 
         if (isset($input['waiver_page'])) {
             $new_input['waiver_page'] = $input['waiver_page'];
+        }
+
+        if (isset($input['confirmation_page'])) {
+            $new_input['confirmation_page'] = $input['confirmation_page'];
         }
 
 //        if (isset($input['paypal_amounts'])) {
@@ -219,6 +231,25 @@ class AdminSettings
         $html .= '<option value=""> -- Select --</option >';
         foreach ($pages as $slug => $page) {
             $selected = ($slug == $waiverPage) ? ' selected' : '';
+            $html .= '<option value="' . $slug . '"' . $selected . '>' . $page . '</option >';
+        }
+        $html .= '</select >';
+
+        printf($html);
+    }
+
+    /**
+     * Get the settings option array and print one of its values
+     */
+    public function confirmationPageCallback()
+    {
+        $pages = $this->getPages();
+        $confirmationPage = isset( $this->options['confirmation_page'] ) ? esc_attr( $this->options['confirmation_page']) : '';
+
+        $html = '<select style="width: 15rem;" id="confirmation_page" name="roster_option_name[confirmation_page]">';
+        $html .= '<option value=""> -- Select --</option >';
+        foreach ($pages as $slug => $page) {
+            $selected = ($slug == $confirmationPage) ? ' selected' : '';
             $html .= '<option value="' . $slug . '"' . $selected . '>' . $page . '</option >';
         }
         $html .= '</select >';

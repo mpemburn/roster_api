@@ -20,8 +20,9 @@ class RosterAPI
     protected $paypalAmounts;
     protected $duesAmount;
     protected $waiverPage;
-    protected $devMode = false;
-    protected $devApiUrl = 'https://cso_roster.test/api';
+    protected $confirmationPage;
+    protected $devMode = true;
+    protected $devApiUrl = 'https://cso_roster.dev/api';
 
     public static function register()
     {
@@ -71,7 +72,7 @@ class RosterAPI
      */
     public function enqueueAssets()
     {
-        $version = '1.00';
+        $version = '1.02';
         wp_enqueue_style( 'jquery-ui'. 'http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css' );
         wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
         wp_enqueue_style('roster_api', plugin_dir_url(__FILE__) . 'css/roster_api.css', '', $version);
@@ -93,7 +94,8 @@ class RosterAPI
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'paypalSandboxKey' => $this->paypalSandboxKey,
             'paypalProductionKey' => $this->paypalProductionKey,
-            'duesAmount' => $this->duesAmount
+            'duesAmount' => $this->duesAmount,
+            'confirmationPage' => '/' . $this->confirmationPage
         ]);
         wp_enqueue_script('ajax-js');
     }
@@ -228,6 +230,7 @@ class RosterAPI
             $this->paypalProductionKey = $settings->paypal_production;
             $this->duesAmount = $settings->dues_amount;
             $this->waiverPage = $settings->waiver_page;
+            $this->confirmationPage = $settings->confirmation_page;
             $this->paypalAmounts = $settings->paypal_amounts;
 
         }

@@ -110,9 +110,12 @@ RosterApi = {
     },
     _handleUpdateResponse: function (response) {
         if (response.success) {
+            document.location = jsNamespace.confirmationPage;
         } else {
-            if (response.data.errors !== undefined) {
-                this._showErrors(response.data.errors);
+            if (response.data) {
+                if (response.data.errors !== undefined) {
+                    this._showErrors(response.data.errors);
+                }
             }
         }
     },
@@ -180,6 +183,11 @@ RosterApi = {
 
         jQuery('#waiver').on('click', function (evt) {
             self.waiverRead = jQuery(this).prop('checked');
+        });
+
+        jQuery('#test_button').on('click', function (evt) {
+            evt.preventDefault();
+            self._doAjax('roster_api_update', 'member_update');
         });
 
     },
