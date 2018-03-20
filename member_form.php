@@ -14,7 +14,7 @@
     <div id="rapi_renew">
         <div>You'll need to enter the email address you used to sign up for your original membership, as well as the original zip code.
             Please <a href="contact">contact us</a> if you do not have that information:</div>
-        <form method="POST" accept-charset="UTF-8" id="member_fetch">
+        <form method="POST" accept-charset="UTF-8" id="member_verify">
             <div class="form-group">
                 <div class="col-md-12 row">
                     <div class="col-md-8">
@@ -26,12 +26,12 @@
                         <input class="col-md-12 required" placeholder="Zip *" name="member_zip" type="text" value="">
                     </div>
                 </div>
-                <div id="member_fetch_button" class="col-md-11">
+                <div id="member_verify_button" class="col-md-11">
                     <div class="col-md-12 field-wrapper text-right">
                         <button class="ui-button" id="existing_member" name="existing_member" disabled>Submit</button>
                     </div>
                 </div>
-                <div class="col-md-12" id="member_fetch_message">* Indicates required field.</div>
+                <div class="col-md-12" id="member_verify_message">* Indicates required field.</div>
             </div>
         </form>
     </div>  <!-- rapi_renew -->

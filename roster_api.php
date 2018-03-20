@@ -35,9 +35,9 @@ class RosterAPI
         $instance->enqueueAssets();
         add_action( 'init', array( $instance, 'registerShortcodes' ) );
         // Set up AJAX handlers
-        add_action('wp_ajax_roster_api_fetch', [$instance, 'fetchMemberFromRoster']);
+        add_action('wp_ajax_roster_api_verify', [$instance, 'verifyMemberInRoster']);
         add_action('wp_ajax_roster_api_update', [$instance, 'updateMember']);
-        add_action('wp_ajax_nopriv_roster_api_fetch', [$instance, 'fetchMemberFromRoster']);
+        add_action('wp_ajax_nopriv_roster_api_verify', [$instance, 'verifyMemberInRoster']);
         add_action('wp_ajax_nopriv_roster_api_update', [$instance, 'updateMember']);
     }
 
@@ -45,7 +45,7 @@ class RosterAPI
     {
     }
 
-    public function fetchMemberFromRoster()
+    public function verifyMemberInRoster()
     {
         $post = $_POST['data'];
 
@@ -59,9 +59,9 @@ class RosterAPI
         $response = $this->getMemberDataOrFail($data);
 
         wp_send_json([
-            'success' => $response->success,
-            'action' => 'fetch',
-            'data' => $this->getFetchMessage($response->success)
+            'success' => $response, //$response->success,
+            'action' => 'verify',
+            //'data' => $this->getFetchMessage($response->success)
         ]);
 
         die();
@@ -72,7 +72,7 @@ class RosterAPI
      */
     public function enqueueAssets()
     {
-        $version = '1.02';
+        $version = '1.03';
         wp_enqueue_style( 'jquery-ui'. 'http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css' );
         wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
         wp_enqueue_style('roster_api', plugin_dir_url(__FILE__) . 'css/roster_api.css', '', $version);
@@ -121,11 +121,12 @@ class RosterAPI
     public function getMemberDataOrFail($data = null)
     {
         if (!is_null($data)) {
-            $url = $this->apiUrl . '/user/' . $data['email'] . '/' . $data['zip'];
-            $response = $this->makeApiCall('GET', $url);
-            $member = json_decode($response['body']);
+            parse_str($data, $parsed);
 
-            return $member;
+            $url = $this->apiUrl . '/member/verify';
+            $response = $this->makeApiCall('GET', $url, $parsed);
+
+            return true; $response;
         }
 
         return null;

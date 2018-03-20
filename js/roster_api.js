@@ -35,7 +35,7 @@ RosterApi = {
         return payment;
     },
     _chooseAction: function (isNew) {
-        var formId = (isNew) ? '#member_update' : '#member_fetch';
+        var formId = (isNew) ? '#member_update' : '#member_verify';
         var formCallback = (isNew) ? this._validateNewMember : this._validateRenewal;
         //this.validator =  Object.create(Validate);
         Validate.init({
@@ -65,8 +65,8 @@ RosterApi = {
             },
             success: function (response) {
                 if (response.action) {
-                    if (response.action === 'fetch') {
-                        self._handleFetchResponse(response);
+                    if (response.action === 'verify') {
+                        self._handleVerifyResponse(response);
                     }
                     if (response.action === 'update') {
                         self._handleUpdateResponse(response);
@@ -88,22 +88,22 @@ RosterApi = {
             'pointer-events': (valid) ? 'auto' : 'none'
         });
     },
-    _enableFetchButton: function () {
+    _enableVerifyButton: function () {
         var self = this;
         jQuery('#existing_member')
             .prop('disabled', false)
             .off()
             .on('click', function (evt) {
                 evt.preventDefault();
-                self._doAjax('roster_api_fetch', 'member_fetch');
+                self._doAjax('roster_api_verify', 'member_verify');
             });
     },
     _getItemList: function () {
         return this.paypalItemList;
     },
-    _handleFetchResponse: function (response) {
+    _handleVerifyResponse: function (response) {
         jQuery('.form-error').remove();
-        jQuery('#member_fetch_message').html(response.data).show();
+        jQuery('#member_verify_message').html(response.data).show();
         jQuery('#rapi_form').show();
         jQuery('#member_fields, #existing_member, #rapi_choice, #required_message').hide();
         this._enablePayPalButton();
@@ -207,7 +207,7 @@ RosterApi = {
         if (isValid) {
             self.formValid = isValid;
             self.waiverRead = true;
-            self._enableFetchButton();
+            self._enableVerifyButton();
         }
     },
     _writeItemList: function () {
