@@ -21,8 +21,8 @@ class RosterAPI
     protected $duesAmount;
     protected $waiverPage;
     protected $confirmationPage;
-    protected $devMode = true;
-    protected $devApiUrl = 'https://cso_roster.dev/api';
+    protected $devMode = false;
+    protected $devApiUrl = 'https://cso_roster.test/api';
 
     public static function register()
     {
@@ -56,12 +56,17 @@ class RosterAPI
 
         $this->loadSettings();
 
-        $response = $this->getMemberDataOrFail($data);
+        $url = $this->apiUrl . '/member/verify/' . $data['email'] . '/' . $data['zip'];
+        $response = $this->makeApiCall('GET', $url);
+
+        $success = (isset($response->success)) ? ($response->success->code == 200) : false;
+        //$data = (isset($response)) ? $response['data'] : '';
 
         wp_send_json([
-            'success' => $response, //$response->success,
+            'success' => $success,
             'action' => 'verify',
-            //'data' => $this->getFetchMessage($response->success)
+            'message' => $this->getFetchMessage($success),
+            'data' => $response
         ]);
 
         die();
@@ -72,7 +77,7 @@ class RosterAPI
      */
     public function enqueueAssets()
     {
-        $version = '1.03';
+        $version = '1.05';
         wp_enqueue_style( 'jquery-ui'. 'http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css' );
         wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
         wp_enqueue_style('roster_api', plugin_dir_url(__FILE__) . 'css/roster_api.css', '', $version);
@@ -118,36 +123,23 @@ class RosterAPI
         add_shortcode( 'memberform', array( $this, 'memberFormHandler' ));
     }
 
-    public function getMemberDataOrFail($data = null)
-    {
-        if (!is_null($data)) {
-            parse_str($data, $parsed);
-
-            $url = $this->apiUrl . '/member/verify';
-            $response = $this->makeApiCall('GET', $url, $parsed);
-
-            return true; $response;
-        }
-
-        return null;
-    }
-
     public function updateMember()
     {
         $data = $_POST['data'];
         parse_str($data, $parsed);
 
         $this->loadSettings();
+        $query = ($data['process_type'] == 'new_member') ? '/member/join' : '/member/payment';
 
-        $url = $this->apiUrl . '/member/payment';
+        $url = $this->apiUrl . '/member/join';
+
         $response = $this->makeApiCall('POST', $url, $parsed);
-        $responseBody = json_decode($response['body']);
-        $success = (!empty($responseBody) && (!property_exists($responseBody, 'errors')));
+        $success = (isset($response['response'])) ? ($response['response']['code'] == 200) : false;
 
         wp_send_json([
             'success' => $success,
             'action' => 'update',
-            'data' => $responseBody
+            'data' => $response
         ]);
 
         die();
@@ -256,7 +248,8 @@ class RosterAPI
             $response = wp_remote_post( $url, [
                 'headers' => $headers,
                 'body' => $data,
-                'sslverify' => false
+                'sslverify' => false,
+                'timeout' => 45,
             ] );
         }
 

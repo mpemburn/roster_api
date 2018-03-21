@@ -1,5 +1,6 @@
 RosterApi = {
     formValid: false,
+    processType: '',
     waiverRead: false,
     duesAmount: jsNamespace.duesAmount,
     extraItemsTotal: 0,
@@ -106,6 +107,7 @@ RosterApi = {
         jQuery('#member_verify_message').html(response.data).show();
         jQuery('#rapi_form').show();
         jQuery('#member_fields, #existing_member, #rapi_choice, #required_message').hide();
+        this._populateForm('member_update', JSON.parse(response.data.body).data);
         this._enablePayPalButton();
     },
     _handleUpdateResponse: function (response) {
@@ -116,6 +118,14 @@ RosterApi = {
                 if (response.data.errors !== undefined) {
                     this._showErrors(response.data.errors);
                 }
+            }
+        }
+    },
+    _populateForm: function(formId, data) {
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+                var value = data[key];
+                jQuery('[name=' + key + ']').val(value);
             }
         }
     },
@@ -187,7 +197,7 @@ RosterApi = {
 
         jQuery('#test_button').on('click', function (evt) {
             evt.preventDefault();
-            self._doAjax('roster_api_update', 'member_update');
+            self.paypalSuccess();
         });
 
     },
@@ -195,9 +205,9 @@ RosterApi = {
         jQuery('#waiver_modal').dialog('open');
     },
     _toggleProcessType: function (isNew) {
-        var type = (isNew) ? 'new_member' : 'renewal';
+        this.processType = (isNew) ? 'new_member' : 'renewal';
 
-        jQuery('[name="process_type"]').val(type);
+        jQuery('[name="process_type"]').val(this.processType);
     },
     _validateNewMember: function (self, isValid) {
         self.formValid = isValid;
