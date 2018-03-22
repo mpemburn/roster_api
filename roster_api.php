@@ -59,8 +59,7 @@ class RosterAPI
         $url = $this->apiUrl . '/member/verify/' . $data['email'] . '/' . $data['zip'];
         $response = $this->makeApiCall('GET', $url);
 
-        $success = (isset($response->success)) ? ($response->success->code == 200) : false;
-        //$data = (isset($response)) ? $response['data'] : '';
+        $success = (isset($response['response'])) ? ($response['response']['code'] == 200) : false;
 
         wp_send_json([
             'success' => $success,
@@ -77,7 +76,7 @@ class RosterAPI
      */
     public function enqueueAssets()
     {
-        $version = '1.05';
+        $version = '1.06';
         wp_enqueue_style( 'jquery-ui'. 'http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css' );
         wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
         wp_enqueue_style('roster_api', plugin_dir_url(__FILE__) . 'css/roster_api.css', '', $version);
@@ -131,7 +130,7 @@ class RosterAPI
         $this->loadSettings();
         $query = ($data['process_type'] == 'new_member') ? '/member/join' : '/member/payment';
 
-        $url = $this->apiUrl . '/member/join';
+        $url = $this->apiUrl . $query;
 
         $response = $this->makeApiCall('POST', $url, $parsed);
         $success = (isset($response['response'])) ? ($response['response']['code'] == 200) : false;
@@ -139,6 +138,7 @@ class RosterAPI
         wp_send_json([
             'success' => $success,
             'action' => 'update',
+            'url' => $url,
             'data' => $response
         ]);
 
