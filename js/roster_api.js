@@ -65,6 +65,7 @@ RosterApi = {
                 data: formData
             },
             success: function (response) {
+                jQuery('#submit_spinner').hide();
                 if (response.action) {
                     if (response.action === 'verify') {
                         self._handleVerifyResponse(response);
@@ -77,6 +78,7 @@ RosterApi = {
                 }
             },
             error: function (response) {
+                jQuery('#submit_spinner').hide();
                 console.log(response);
             }
         });
@@ -96,6 +98,7 @@ RosterApi = {
             .off()
             .on('click', function (evt) {
                 evt.preventDefault();
+                jQuery('#submit_spinner').show();
                 self._doAjax('roster_api_verify', 'member_verify');
             });
     },
