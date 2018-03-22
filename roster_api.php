@@ -21,7 +21,7 @@ class RosterAPI
     protected $duesAmount;
     protected $waiverPage;
     protected $confirmationPage;
-    protected $devMode = false;
+    protected $devMode = true;
     protected $devApiUrl = 'https://cso_roster.test/api';
 
     public static function register()
@@ -128,7 +128,7 @@ class RosterAPI
         parse_str($data, $parsed);
 
         $this->loadSettings();
-        $query = ($data['process_type'] == 'new_member') ? '/member/join' : '/member/payment';
+        $query = ($parsed['process_type'] == 'new_member') ? '/member/join' : '/member/payment';
 
         $url = $this->apiUrl . $query;
 
