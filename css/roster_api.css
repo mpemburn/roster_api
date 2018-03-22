@@ -17,7 +17,7 @@
 }
 
 #test_button_wrapper {
-    display: block;
+    display: none;
 }
 
 button#existing_member {

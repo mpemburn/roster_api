@@ -59,13 +59,13 @@ class RosterAPI
         $url = $this->apiUrl . '/member/verify/' . $data['email'] . '/' . $data['zip'];
         $response = $this->makeApiCall('GET', $url);
 
-        $success = (isset($response['response'])) ? ($response['response']['code'] == 200) : false;
+        $success = $this->getResponseSuccess($response);
 
         wp_send_json([
             'success' => $success,
             'action' => 'verify',
-            'message' => $this->getFetchMessage($success),
-            'data' => $response
+            'message' => $this->getVerifyMessage($success),
+            'data' => $response,
         ]);
 
         die();
@@ -76,7 +76,7 @@ class RosterAPI
      */
     public function enqueueAssets()
     {
-        $version = '1.06';
+        $version = '1.08';
         wp_enqueue_style( 'jquery-ui'. 'http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css' );
         wp_enqueue_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
         wp_enqueue_style('roster_api', plugin_dir_url(__FILE__) . 'css/roster_api.css', '', $version);
@@ -133,26 +133,26 @@ class RosterAPI
         $url = $this->apiUrl . $query;
 
         $response = $this->makeApiCall('POST', $url, $parsed);
-        $success = (isset($response['response'])) ? ($response['response']['code'] == 200) : false;
+        $success = $this->getResponseSuccess($response);
 
         wp_send_json([
             'success' => $success,
             'action' => 'update',
-            'url' => $url,
+            //'url' => $url,
             'data' => $response
         ]);
 
         die();
     }
 
-    protected function getFetchMessage($success)
+    protected function getVerifyMessage($success)
     {
         if ($success) {
             $message = 'Thanks! Please continue your renewal process by clicking the <strong>PayPal</strong> button.';
         } else {
             $message = 'Sorry! We were unable to find a member with that email address and zip code in our database.
                 You may have used a different email address to sign up originally.
-                Please contact our <a href="/contact">Club Secretary</a>';
+                Please try again, or contact our <a href="/contact">Club Secretary</a>';
         }
 
         return $message;
@@ -211,6 +211,18 @@ class RosterAPI
         return $content;
     }
 
+    protected function getResponseSuccess($response)
+    {
+        $success = false;
+
+        $is200 = (isset($response['response'])) ? ($response['response']['code'] == 200) : false;
+        if ($is200) {
+            $success = (isset($response['body'])) ? json_decode($response['body'])->success : false;
+        }
+
+        return $success;
+    }
+
     protected function loadSettings()
     {
         $option = get_option('roster_option_name');
@@ -234,7 +246,7 @@ class RosterAPI
     {
         $response = null;
 
-        // Future security enhancement
+        // TODO: Future security enhancement
         $username = 'your-username';
         $password = 'your-password';
         $headers = array( 'Authorization' => 'Basic ' . base64_encode( "$username:$password" ) );

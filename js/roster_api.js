@@ -104,11 +104,15 @@ RosterApi = {
     },
     _handleVerifyResponse: function (response) {
         jQuery('.form-error').remove();
-        jQuery('#member_verify_message').html(response.data).show();
-        jQuery('#rapi_form').show();
-        jQuery('#member_fields, #existing_member, #rapi_choice, #required_message').hide();
-        this._populateForm('member_update', JSON.parse(response.data.body).data);
-        this._enablePayPalButton();
+        if (response.message) {
+            jQuery('#member_verify_message').html(response.message).show();
+        }
+        if (response.success) {
+            jQuery('#rapi_form').show();
+            jQuery('#member_fields, #existing_member, #rapi_choice, #required_message').hide();
+            this._populateForm('member_update', JSON.parse(response.data.body).data);
+            this._enablePayPalButton();
+        }
     },
     _handleUpdateResponse: function (response) {
         if (response.success) {
