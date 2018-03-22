@@ -1,6 +1,6 @@
 paypal.Button.render({
 
-    env: 'sandbox', // sandbox | production
+    env: 'production', // sandbox | production
 
     // PayPal Client IDs
     client: {
