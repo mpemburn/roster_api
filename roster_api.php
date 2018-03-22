@@ -21,7 +21,7 @@ class RosterAPI
     protected $duesAmount;
     protected $waiverPage;
     protected $confirmationPage;
-    protected $devMode = true;
+    protected $devMode = false;
     protected $devApiUrl = 'https://cso_roster.test/api';
 
     public static function register()
