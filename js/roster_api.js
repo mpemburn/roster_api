@@ -12,6 +12,7 @@ RosterApi = {
         this._chooseAction(true);
     },
     paypalSuccess: function () {
+        this.showPaypalSpinner(false);
         this._doAjax('roster_api_update', 'member_update');
     },
     getTotal: function () {
@@ -35,7 +36,10 @@ RosterApi = {
         }];
         return payment;
     },
-    _chooseAction: function (isNew) {
+    showPaypalSpinner: function (show) {
+     jQuery('#paypal_spinner').toggle(show);
+    },
+   _chooseAction: function (isNew) {
         var formId = (isNew) ? '#member_update' : '#member_verify';
         var formCallback = (isNew) ? this._validateNewMember : this._validateRenewal;
         //this.validator =  Object.create(Validate);

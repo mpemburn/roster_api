@@ -160,7 +160,7 @@
                                 ?>
                             </div>
                             <div class="col-md-12 field-wrapper row">
-                                <div class="col-md-8">
+                                <div class="col-md-7">
                                     <div id="waiver_wrapper">
                                         Please read the <a id="waiver_link" href=""><strong>WAIVER OF LIABILITY</strong></a>
                                         <label for="waiver" class="waiver">
@@ -168,7 +168,10 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div id="paypal_wrapper" class="col-md-4">
+                                <div class="col-md-1">
+                                    <span id="paypal_spinner" class="spinner"></span>
+                                </div>
+                                <div id="paypal_wrapper" class="col-md-2">
                                     <div id="paypal-button-container"></div>
                                 </div>
                             </div>

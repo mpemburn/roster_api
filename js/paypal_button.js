@@ -9,7 +9,7 @@ paypal.Button.render({
     },
 
     style: {
-            size: 'medium',
+            size: 'small',
             color: 'gold',
             shape: 'rect',
             label: 'checkout'
@@ -20,6 +20,8 @@ paypal.Button.render({
 
     // payment() is called when the button is clicked
     payment: function(data, actions) {
+        jsNamespace.rosterApi.showPaypalSpinner(true);
+
         // Make a call to the REST api to create the payment
         return actions.payment.create({
               payment: {
@@ -41,7 +43,7 @@ paypal.Button.render({
         });
     },
     onCancel: function(data, actions) {
-        var foo;
+        jsNamespace.rosterApi.showPaypalSpinner(false);
     }
 
 }, '#paypal-button-container');

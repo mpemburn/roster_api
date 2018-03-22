@@ -59,6 +59,11 @@ span.spinner {
     filter: alpha(opacity=70);
 }
 
+#paypal_spinner {
+    left: 20px;
+    top: 2px;
+}
+
 label.control-label {
     padding: 0 5px;
 }
