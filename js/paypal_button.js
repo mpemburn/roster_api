@@ -27,7 +27,8 @@ paypal.Button.render({
               payment: {
                   transactions: [
                       {
-                          amount: { total: jsNamespace.rosterApi.getTotal(), currency: 'USD' }
+                          amount: { total: jsNamespace.rosterApi.getTotal(), currency: 'USD' },
+                          description: "Dues payment"
                       }
                   ]
               }
